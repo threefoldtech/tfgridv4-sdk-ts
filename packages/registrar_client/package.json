@@ -1,0 +1,41 @@
+{
+  "name": "registrar_client",
+  "version": "0.0.0",
+  "description": "Registrar Client",
+  "keywords": [],
+  "author": "maayarosama",
+  "license": "MIT",
+  "main": "lib/registrar_client.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.yarnpkg.com"
+  },
+  "repository": "git+https://github.com/threefoldtech/tfgridv4-sdk-ts.git",
+  "scripts": {
+    "test": "node ./__tests__/registrar_client.test.js",
+    "build": "npm-run-all es6-build node-build",
+    "node-build": "tsc --build tsconfig-node.json",
+    "es6-build": "tsc --build tsconfig-es6.json",
+    "start": "ts-node ts-node src/index.ts"
+  },
+  "bugs": {
+    "url": "https://github.com/threefoldtech/tfgridv4-sdk-ts/issues"
+  },
+  "homepage": "https://github.com/threefoldtech/tfgridv4-sdk-ts#readme",
+  "devDependencies": {
+    "@types/node": "^22.13.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3",
+    "npm-run-all": "^4.1.5"
+  },
+  "dependencies": {
+    "axios": "^1.2.0",
+    "dotenv": "^16.0.0"
+  }
+}
