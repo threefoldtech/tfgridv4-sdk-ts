@@ -1,13 +1,15 @@
 import { log } from "console";
-import { Node } from "../types/types";
+import { Node, NodesFilters } from "../types/types";
 import Client from "../client/client";
 
 class Nodes {
   protected readonly path = "/nodes";
 
-  async listNodes(): Promise<Node[]> {
+  async listNodes(nodes: Partial<NodesFilters> = {}): Promise<Node[]> {
     try {
-      const data: Node[] = await Client.get<Node[]>(this.path);
+      const data: Node[] = await Client.get<Node[]>(this.path, {
+        params: nodes,
+      });
       return data;
     } catch (error) {
       log("Error fetching nodes:", error);

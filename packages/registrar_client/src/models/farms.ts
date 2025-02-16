@@ -1,13 +1,15 @@
 import { log } from "console";
-import { Farm } from "../types/types";
+import { Farm, FarmsFilters } from "../types/types";
 import Client from "../client/client";
 
 class Farms {
   protected readonly path = "/farms";
 
-  async listFarms(): Promise<Farm[]> {
+  async listFarms(farm: Partial<FarmsFilters> = {}): Promise<Farm[]> {
     try {
-      const data: Farm[] = await Client.get<Farm[]>(this.path);
+      const data: Farm[] = await Client.get<Farm[]>(this.path, {
+        params: farm,
+      });
       return data;
     } catch (error) {
       log("Error fetching farms:", error);

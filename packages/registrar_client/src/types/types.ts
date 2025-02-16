@@ -48,3 +48,42 @@ export interface Node {
   virtualized: boolean;
   uptime?: Uptime[];
 }
+export interface Account {
+  twin_id: number;
+  relays: string[];
+  rmb_enc_key: string;
+  CreatedAt: string;
+  UpdatedAt: string;
+  public_key: string;
+  Farms: any[];
+}
+export interface AccountOptions {
+  twin_id?: number;
+  public_key?: string;
+}
+
+export interface AccountModel {
+  public_key: string;
+  relays: string[];
+  rmb_enc_key: string;
+  signature: string;
+  timestamp: number;
+}
+
+export interface FarmsFilters {
+  farm_name?: string;
+  farm_id?: number;
+  twin_id?: number;
+  page?: number;
+  size?: number;
+}
+
+export interface NodesFilters {
+  node_id?: number;
+  farm_id?: number;
+  twin_id?: number;
+  status?: string;
+  healthy?: boolean;
+  page?: number;
+  size?: number;
+}
