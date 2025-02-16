@@ -1,27 +1,23 @@
-import { log } from "console";
 import { Account, AccountModel, AccountOptions } from "../types/types";
 import Client from "../client/client";
-import { encodeBase64, decodeBase64 } from "tweetnacl-util";
-
+import * as tweetnacl from "tweetnacl";
+import * as base64 from "base64-js";
 class Accounts {
   protected readonly path = "/accounts";
-  createSignature(public_key: string, timestamp: number): string {
-    const TextEncodetttr = `${timestamp}:${public_key}`;
-    const publicKeyUint8 = new TextEncoder().encode(TextEncodetttr);
-    const keyBase64 = encodeBase64(publicKeyUint8);
-    return keyBase64;
 
-    // const publicKeyUint8 = new TextEncoder().encode(public_key);
-    // const keyBase64 = encodeBase64(publicKeyUint8);
-    // return `${timestamp}:${keyBase64}`;
-  }
   async createAccount(account: Partial<AccountModel>): Promise<any | null> {
     account.timestamp = Math.floor(Date.now() / 1000);
-    if (account.public_key)
-      account.signature = this.createSignature(
-        account.public_key,
-        account.timestamp
-      );
+    const keyPair = tweetnacl.sign.keyPair();
+    const publicKey = keyPair.publicKey;
+    const privateKey = keyPair.secretKey;
+
+    account.signature = this.createSignature(
+      account.timestamp,
+      publicKey,
+      privateKey
+    );
+
+    account.public_key = base64.fromByteArray(publicKey);
 
     try {
       const data: any = await Client.post<any>(this.path, account);
@@ -41,6 +37,19 @@ class Accounts {
       console.error(`Error fetching account:`, error);
       return null;
     }
+  }
+  private createSignature(
+    timestamp: number,
+    publicKey: Uint8Array,
+    privateKey: Uint8Array
+  ): string {
+    const challenge = `${timestamp}:${base64.fromByteArray(publicKey)}`;
+    const signature = tweetnacl.sign.detached(
+      Buffer.from(challenge, "utf-8"),
+      privateKey
+    );
+
+    return base64.fromByteArray(signature);
   }
 }
 
