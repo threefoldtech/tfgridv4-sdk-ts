@@ -1,5 +1,5 @@
 import { RegistrarClient } from "../../client/client";
-import { NodeRegistrationRequest, NodesFilter, UpdateNodeRequest, UptimeReportRequest } from "./types";
+import { NodeRegistrationRequest, NodesFilter, UpdateNodeRequest, UptimeReportRequest, Node } from "./types";
 import * as tweetnacl from "tweetnacl";
 import * as base64 from "base64-js";
 
@@ -93,7 +93,7 @@ export class Nodes {
     try {
       const data = await this.client.post<any>(`${this.nodeUri}/${nodeID}/uptime`, uptime, config);
       return data;
-    } catch (e) {
+    } catch (e: any) {
       console.error("Failed to report node uptime: ", e);
       return null;
     }

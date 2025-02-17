@@ -37,15 +37,8 @@ interface Resources {
   sru: number;
 }
 
-export interface NodeRegistrationRequest {
-  farm_id: number;
-  interfaces: Interfaces[];
-  location: Location;
-  resources: Resources;
-  secureBoot?: boolean;
-  serialNumber: string;
+export interface NodeRegistrationRequest extends UpdateNodeRequest {
   twin_id: number;
-  virtualized?: boolean;
 }
 
 export interface UpdateNodeRequest {
@@ -54,7 +47,7 @@ export interface UpdateNodeRequest {
   location: Location;
   resources: Resources;
   secureBoot?: boolean;
-  serialNumber: string;
+  serial_number: string;
   virtualized?: boolean;
 }
 

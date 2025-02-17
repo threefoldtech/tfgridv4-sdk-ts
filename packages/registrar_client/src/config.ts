@@ -3,7 +3,10 @@ export class Config {
   public readonly registrarUrl: string;
 
   private constructor() {
-    this.registrarUrl = process.env.REGISTRAR_URL || "";
+    if (!process.env.REGISTRAR_URL) {
+      throw new Error("REGISTRAR_URL environment variable is not defined");
+    }
+    this.registrarUrl = process.env.REGISTRAR_URL;
   }
 
   public static getInstance(): Config {

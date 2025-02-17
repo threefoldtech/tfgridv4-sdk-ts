@@ -11,7 +11,7 @@ export class Farms {
     this.client = client;
   }
 
-  async createFarm(farm: Partial<Farm>): Promise<Farm | null> {
+  async createFarm(farm: Partial<Farm>): Promise<number | null> {
     const twinID = farm.twin_id;
     if (!twinID) {
       throw new Error("TwinID is not found");
@@ -34,7 +34,7 @@ export class Farms {
     };
 
     try {
-      const data = await this.client.post<Farm>(this.farmUri, farm, config);
+      const data = await this.client.post<number>(this.farmUri, farm, config);
       return data;
     } catch (e) {
       console.error("Failed to create farm: ", e);

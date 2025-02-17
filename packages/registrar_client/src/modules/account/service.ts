@@ -16,9 +16,13 @@ export class Accounts {
     const timestamp = Math.floor(Date.now() / 1000);
 
     const privateKey = this.client.private_key;
-    const publicKey = base64.fromByteArray(
-      tweetnacl.sign.keyPair.fromSecretKey(base64.toByteArray(privateKey)).publicKey,
-    );
+    let publicKey;
+    try {
+      publicKey = base64.fromByteArray(tweetnacl.sign.keyPair.fromSecretKey(base64.toByteArray(privateKey)).publicKey);
+    } catch (e) {
+      console.error("Failed to generate public key: ", e);
+      return null;
+    }
 
     const challenge = `${timestamp}:${publicKey}`;
     const signature = base64.fromByteArray(
