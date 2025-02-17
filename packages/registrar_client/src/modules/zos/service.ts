@@ -1,14 +1,12 @@
 import { RegistrarClient } from "../../client/client";
-import * as tweetnacl from "tweetnacl";
-import * as base64 from "base64-js";
 
 export class Zos {
   private client: RegistrarClient;
 
   private readonly zosUri = "/zos";
 
-  constructor() {
-    this.client = new RegistrarClient();
+  constructor(client: RegistrarClient) {
+    this.client = client;
   }
 
   async getZosVersion(): Promise<string | null> {

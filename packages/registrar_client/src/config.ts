@@ -1,4 +1,4 @@
-class Config {
+export class Config {
   private static _instance: Config;
   public readonly registrarUrl: string;
 

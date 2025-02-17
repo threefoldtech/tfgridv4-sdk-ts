@@ -7,8 +7,8 @@ export class Farms {
   private client: RegistrarClient;
   private readonly farmUri = "/farms";
 
-  constructor() {
-    this.client = new RegistrarClient();
+  constructor(client: RegistrarClient) {
+    this.client = client;
   }
 
   async createFarm(farm: Partial<Farm>): Promise<Farm | null> {
@@ -22,7 +22,7 @@ export class Farms {
     }
     const timestamp = Math.floor(Date.now() / 1000);
     const challenge = `${timestamp}:${twinID}`;
-    const privateKey = process.env.PRIVATE_KEY;
+    const privateKey = this.client.private_key;
     if (!privateKey) {
       throw new Error("Private key is not found");
     }
@@ -68,7 +68,7 @@ export class Farms {
     }
     const timestamp = Math.floor(Date.now() / 1000);
     const challenge = `${timestamp}:${twinID}`;
-    const privateKey = process.env.PRIVATE_KEY;
+    const privateKey = this.client.private_key;
     if (!privateKey) {
       throw new Error("Private key is not found");
     }

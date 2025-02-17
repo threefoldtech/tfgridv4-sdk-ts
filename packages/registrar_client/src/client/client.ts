@@ -1,6 +1,11 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+import { Accounts } from "../modules/account/service";
+import { Config } from "../config";
+import { Farms } from "../modules/farm/service";
+import { Nodes } from "../modules/node/service";
+import { Zos } from "../modules/zos/service";
 
-export class RegistrarClient {
+export abstract class BaseClient {
   private client: AxiosInstance;
 
   constructor() {
@@ -27,5 +32,22 @@ export class RegistrarClient {
   async put<T>(uri: string, data: any, config?: AxiosRequestConfig): Promise<T> {
     const response = await this.client.put<T>(uri, data, config);
     return response.data;
+  }
+}
+
+export class RegistrarClient extends BaseClient {
+  public readonly private_key: string;
+  accounts: Accounts;
+  farms: Farms;
+  nodes: Nodes;
+  zos: Zos;
+
+  constructor(private_key: string) {
+    super();
+    this.private_key = private_key;
+    this.accounts = new Accounts(this);
+    this.farms = new Farms(this);
+    this.nodes = new Nodes(this);
+    this.zos = new Zos(this);
   }
 }

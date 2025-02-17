@@ -8,26 +8,26 @@ export class Accounts {
 
   private readonly accountUri = "/accounts";
 
-  constructor() {
-    this.client = new RegistrarClient();
+  constructor(client: RegistrarClient) {
+    this.client = client;
   }
 
   async createAccount(request: Partial<CreateAccountRequest>): Promise<Account | null> {
     const timestamp = Math.floor(Date.now() / 1000);
 
-    const keyPair = tweetnacl.sign.keyPair();
-    const publicKey = base64.fromByteArray(keyPair.publicKey);
-    const privateKey = base64.fromByteArray(keyPair.secretKey);
+    const privateKey = this.client.private_key;
+    const publicKey = base64.fromByteArray(
+      tweetnacl.sign.keyPair.fromSecretKey(base64.toByteArray(privateKey)).publicKey,
+    );
 
     const challenge = `${timestamp}:${publicKey}`;
-    const signature = base64.fromByteArray(tweetnacl.sign.detached(Buffer.from(challenge, "utf-8"), keyPair.secretKey));
+    const signature = base64.fromByteArray(
+      tweetnacl.sign.detached(Buffer.from(challenge, "utf-8"), base64.toByteArray(privateKey)),
+    );
 
     request.public_key = publicKey;
     request.signature = signature;
     request.timestamp = timestamp;
-
-    process.env.PUBLIC_KEY = publicKey;
-    process.env.PRIVATE_KEY = privateKey;
 
     try {
       const data = await this.client.post<Account>(this.accountUri, request);
@@ -70,7 +70,7 @@ export class Accounts {
   async updateAccount(twinID: number, body: UpdateAccountRequest): Promise<any> {
     const timestamp = Math.floor(Date.now() / 1000);
     const challenge = `${timestamp}:${twinID}`;
-    const privateKey = process.env.PRIVATE_KEY;
+    const privateKey = this.client.private_key;
     if (!privateKey) {
       throw new Error("Private key is not found");
     }
