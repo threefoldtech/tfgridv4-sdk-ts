@@ -5,11 +5,6 @@ module.exports = {
     "^.+\\.(ts|tsx)$": ["ts-jest", { useESM: true }],
   },
   extensionsToTreatAsEsm: [".ts", ".tsx"],
-  globals: {
-    "ts-jest": {
-      useESM: true,
-    },
-  },
   testEnvironment: "node",
   setupFiles: ["dotenv/config"],
 };

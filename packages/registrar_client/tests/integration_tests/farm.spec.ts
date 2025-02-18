@@ -7,7 +7,7 @@ describe("test farm module", () => {
   const keyPair = tweetnacl.sign.keyPair();
   const privateKey = base64.fromByteArray(keyPair.secretKey);
 
-  const client = new RegistrarClient(privateKey);
+  const client = new RegistrarClient({ baseURL: "http://registrar:8080/v1", privateKey: privateKey });
 
   let twinID = 1;
   let farmID = 1;
@@ -24,10 +24,16 @@ describe("test farm module", () => {
     farmID = res!;
   });
 
-  test("list farms", async () => {
+  test("list farms without filters", async () => {
     const farms = await client.farms.listFarms({});
     expect(farms).not.toBeNull();
     expect(farms?.length).toBeGreaterThan(0);
+  });
+
+  test("list farms with filters", async () => {
+    const farms = await client.farms.listFarms({ twin_id: twinID });
+    expect(farms).not.toBeNull();
+    expect(farms?.length).toBeGreaterThan;
   });
 
   test("get farm", async () => {
@@ -39,7 +45,6 @@ describe("test farm module", () => {
     const farmName = `test24-${Date.now()}`;
     const farm = await client.farms.updateFarm(farmID, twinID, farmName);
     expect(farm).not.toBeNull();
-
     const updatedFarm = await client.farms.getFarm(farmID);
     expect(updatedFarm).not.toBeNull();
     expect(updatedFarm?.farm_name).toBe(farmName);

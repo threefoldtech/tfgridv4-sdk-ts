@@ -4,10 +4,10 @@ This package provides a client for interacting with the TFGrid v4 Node Registrar
 
 ## Getting Started
 
-Set the `REGISTRAR_URL` in your environment variables to point to the TFGrid v4 Node Registrar.
+To initialize the Registrar Client, you need to provide the base url of registrar and your private key. Here is an example:
 
-```sh
-export REGISTRAR_URL=https://your-registrar-url
+```typescript
+const client = new RegistrarClient({baseURl:"https://registrar.dev4.grid.tf/v1" , privateKey: your_private_key});
 ```
 
 ## Usage
@@ -15,18 +15,23 @@ export REGISTRAR_URL=https://your-registrar-url
 Here is an example of how to use the Registrar Client:
 
 ```typescript
-const privateKey = "your_private_key";
-const client = new RegistrarClient(privateKey);
+const client = new RegistrarClient({baseUrl: URl, privateKey: your_private_key});
 
+// Example: Create an account
 const accountRequest: CreateAccountRequest = {
   // your create account request data
 };
-client.account
-  .createAccount(accountRequest)
-  .then(account => {
-    console.log("Account created:", account);
-  })
-  .catch(error => {
-    console.error("Failed to create account:", error);
-  });
+
+const account = await client.account.createAccount(accountRequest);
+
+// Example: Get account details
+const twinID = account.twin_id;
+const accountDetails = await client.account.getAccountByTwinId(twinID);
+
+// Example: Update account information
+const updateAccountRequest: UpdateAccountRequest = {
+  // your update account request data
+};
+
+const updatedAccount = await client.account.updateAccount(twinID, updateAccountRequest);
 ```

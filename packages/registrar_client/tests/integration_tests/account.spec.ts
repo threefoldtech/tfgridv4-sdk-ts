@@ -9,7 +9,7 @@ describe("test account module", () => {
   const publicKey = base64.fromByteArray(keyPair.publicKey);
   const privateKey = base64.fromByteArray(keyPair.secretKey);
 
-  const client = new RegistrarClient(privateKey);
+  const client = new RegistrarClient({ baseURL: "http://registrar:8080/v1", privateKey: privateKey });
 
   let twinID = 1;
   test("create account", async () => {

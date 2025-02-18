@@ -1,7 +1,6 @@
 import { RegistrarClient } from "../../client/client";
 import { Farm, FarmsFilter } from "./types";
-import * as tweetnacl from "tweetnacl";
-import * as base64 from "base64-js";
+import { createAuthHeader } from "../../utils";
 
 export class Farms {
   private client: RegistrarClient;
@@ -11,7 +10,7 @@ export class Farms {
     this.client = client;
   }
 
-  async createFarm(farm: Partial<Farm>): Promise<number | null> {
+  async createFarm(farm: Partial<Farm>): Promise<number> {
     const twinID = farm.twin_id;
     if (!twinID) {
       throw new Error("TwinID is not found");
@@ -20,70 +19,29 @@ export class Farms {
     if (!farmName || farmName.length < 1 || farmName.length > 40) {
       throw new Error("Farm name must be between 1 and 40 characters");
     }
-    const timestamp = Math.floor(Date.now() / 1000);
-    const challenge = `${timestamp}:${twinID}`;
-    const privateKey = this.client.private_key;
-    if (!privateKey) {
-      throw new Error("Private key is not found");
-    }
-    const signature = tweetnacl.sign.detached(Buffer.from(challenge, "utf-8"), base64.toByteArray(privateKey));
-    const config = {
-      headers: {
-        "X-Auth": `${Buffer.from(challenge).toString("base64")}:${base64.fromByteArray(signature)}`,
-      },
-    };
+    const headers = createAuthHeader(twinID, this.client.privateKey);
 
-    try {
-      const data = await this.client.post<number>(this.farmUri, farm, config);
-      return data;
-    } catch (e) {
-      console.error("Failed to create farm: ", e);
-      return null;
-    }
+    const data = await this.client.post<number>(this.farmUri, farm, { headers });
+    return data;
   }
 
-  async listFarms(filter: FarmsFilter): Promise<Farm[] | null> {
-    try {
-      const data = await this.client.get<Farm[]>(this.farmUri, { params: filter });
-      return data;
-    } catch (e) {
-      console.error("Failed to get farms: ", e);
-      return null;
-    }
+  async listFarms(filter: FarmsFilter): Promise<Farm[]> {
+    const data = await this.client.get<Farm[]>(this.farmUri, { params: filter });
+    return data;
   }
 
-  async getFarm(farmID: number): Promise<Farm | null> {
-    try {
-      const data = await this.client.get<Farm>(`${this.farmUri}/${farmID}`);
-      return data;
-    } catch (e) {
-      console.error("Failed to get farm: ", e);
-      return null;
-    }
+  async getFarm(farmID: number): Promise<Farm> {
+    const data = await this.client.get<Farm>(`${this.farmUri}/${farmID}`);
+    return data;
   }
 
   async updateFarm(farmID: number, twinID: number, name: string): Promise<any> {
     if (!name || name.length < 1 || name.length > 40) {
       throw new Error("Farm name must be between 1 and 40 characters");
     }
-    const timestamp = Math.floor(Date.now() / 1000);
-    const challenge = `${timestamp}:${twinID}`;
-    const privateKey = this.client.private_key;
-    if (!privateKey) {
-      throw new Error("Private key is not found");
-    }
-    const signature = tweetnacl.sign.detached(Buffer.from(challenge, "utf-8"), base64.toByteArray(privateKey));
-    const config = {
-      headers: {
-        "X-Auth": `${Buffer.from(challenge).toString("base64")}:${base64.fromByteArray(signature)}`,
-      },
-    };
-    try {
-      const data = await this.client.patch<any>(`${this.farmUri}/${farmID}`, { farm_name: name }, config);
-      return data;
-    } catch (e) {
-      console.error("Failed to update farm: ", e);
-      return null;
-    }
+    const headers = createAuthHeader(twinID, this.client.privateKey);
+
+    const data = await this.client.patch<any>(`${this.farmUri}/${farmID}`, { farm_name: name }, { headers });
+    return data;
   }
 }

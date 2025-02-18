@@ -1,5 +1,5 @@
 import { describe, test, expect } from "@jest/globals";
-import { NodeRegistrationRequest, UptimeReportRequest } from "../../src/modules/node/types";
+import { NodeRegistrationRequest, UptimeReportRequest, NodesFilter } from "../../src/modules/node/types";
 import { RegistrarClient } from "../../src/client/client";
 import tweetnacl from "tweetnacl";
 import base64 from "base64-js";
@@ -8,7 +8,7 @@ describe("test node module", () => {
   const keyPair = tweetnacl.sign.keyPair();
   const privateKey = base64.fromByteArray(keyPair.secretKey);
 
-  const client = new RegistrarClient(privateKey);
+  const client = new RegistrarClient({ baseURL: "http://registrar:8080/v1", privateKey: privateKey });
 
   let twinID = 1;
   let nodeID = 1;
@@ -54,10 +54,26 @@ describe("test node module", () => {
     nodeID = res!;
   });
 
-  test("list nodes", async () => {
+  test("list nodes without filters", async () => {
     const nodes = await client.nodes.listNodes({});
     expect(nodes).not.toBeNull();
     expect(nodes?.length).toBeGreaterThan(0);
+  });
+
+  test("list nodes with filter farm id", async () => {
+    const filter: NodesFilter = { farm_id: farmID };
+    const nodes = await client.nodes.listNodes(filter);
+    expect(nodes).not.toBeNull();
+    expect(nodes?.length).toBeGreaterThan(0);
+    expect(nodes?.[0].farm_id).toBe(farmID);
+  });
+
+  test("list nodes with filter node id", async () => {
+    const filter: NodesFilter = { node_id: nodeID };
+    const nodes = await client.nodes.listNodes(filter);
+    expect(nodes).not.toBeNull();
+    expect(nodes?.length).toBeGreaterThan(0);
+    expect(nodes?.[0].node_id).toBe(nodeID);
   });
 
   test("get node", async () => {
