@@ -5,7 +5,8 @@
     "packages/*"
   ],
   "dependencies": {
-    "cosmiconfig": "^9.0.0"
+    "cosmiconfig": "^9.0.0",
+    "globals": "^15.15.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.24.0",
