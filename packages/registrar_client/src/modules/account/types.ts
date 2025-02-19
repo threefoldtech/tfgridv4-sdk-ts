@@ -1,13 +1,13 @@
 import { Farm } from "../farm/types";
 
 export interface Account {
-  createdAt: string;
+  created_at: string;
   public_key: string;
   twin_id: number;
   relays: string[];
   rmb_enc_key: string;
   farms: Farm[];
-  updatedAt: string;
+  updated_at: string;
 }
 
 export interface CreateAccountRequest {

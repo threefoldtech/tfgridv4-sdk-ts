@@ -21,7 +21,7 @@ describe("test node module", () => {
 
     const farm = await client.farms.createFarm({ twin_id: twinID, farm_name: `test-${Date.now()}` });
     expect(farm).not.toBeNull();
-    farmID = farm!;
+    farmID = farm!.farm_id;
     const dummyNode: NodeRegistrationRequest = {
       twin_id: twinID,
       farm_id: farmID,
@@ -44,14 +44,14 @@ describe("test node module", () => {
         mru: 8192,
         sru: 512000,
       },
-      secureBoot: true,
+      secure_boot: true,
       serial_number: "SN-123456789",
       virtualized: true,
     };
     const res = await client.nodes.registerNode(dummyNode);
     expect(res).not.toBeNull();
 
-    nodeID = res!;
+    nodeID = res!.node_id;
   });
 
   test("list nodes without filters", async () => {
@@ -123,7 +123,7 @@ describe("test node module", () => {
     expect(res).not.toBeNull();
     const node = await client.nodes.getNode(nodeID);
     expect(node).not.toBeNull();
-    expect(node?.uptime).not.toBeNull();
+    console.log(node);
     expect(node?.uptime.length).toBeGreaterThan(0);
   });
 });

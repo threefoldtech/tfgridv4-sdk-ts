@@ -1,26 +1,26 @@
 export interface Node {
   approved: boolean;
-  createdAt: string;
+  created_at: string;
   farm_id: number;
   interfaces: Interfaces[];
   location: Location;
   node_id: number;
   resources: Resources;
-  secureBoot: boolean;
-  serialNumber: string;
+  secure_boot: boolean;
+  serial_number: string;
   twin_id: number;
-  updatedAt: string;
+  updated_at: string;
   uptime: UptimeReport[];
   virtualized: boolean;
 }
 
 interface UptimeReport {
-  createdAt: string;
+  created_at: string;
   duration: number;
   id: number;
   node_id: number;
   timestamp: string;
-  wasRestart: boolean;
+  was_restart: boolean;
 }
 
 interface Location {
@@ -46,7 +46,7 @@ export interface UpdateNodeRequest {
   interfaces: Interfaces[];
   location: Location;
   resources: Resources;
-  secureBoot?: boolean;
+  secure_boot?: boolean;
   serial_number: string;
   virtualized?: boolean;
 }
@@ -70,4 +70,8 @@ export interface NodesFilter {
 export interface UptimeReportRequest {
   timestamp: string;
   uptime: number;
+}
+
+export interface NodeRegistrationResponse{
+  node_id: number;
 }

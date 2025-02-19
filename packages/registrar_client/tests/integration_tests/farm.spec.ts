@@ -21,7 +21,7 @@ describe("test farm module", () => {
     const res = await client.farms.createFarm({ twin_id: twinID, farm_name: farmName });
     expect(res).not.toBeNull();
 
-    farmID = res!;
+    farmID = res!.farm_id;
   });
 
   test("list farms without filters", async () => {

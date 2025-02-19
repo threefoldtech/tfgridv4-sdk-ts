@@ -1,5 +1,5 @@
 import { RegistrarClient } from "../../client/client";
-import { NodeRegistrationRequest, NodesFilter, UpdateNodeRequest, UptimeReportRequest, Node } from "./types";
+import { NodeRegistrationRequest, NodesFilter, UpdateNodeRequest, UptimeReportRequest, Node, NodeRegistrationResponse } from "./types";
 import { createAuthHeader } from "../../utils";
 
 export class Nodes {
@@ -10,10 +10,10 @@ export class Nodes {
     this.client = client;
   }
 
-  async registerNode(node: NodeRegistrationRequest): Promise<number> {
+  async registerNode(node: NodeRegistrationRequest): Promise<NodeRegistrationResponse> {
     const headers = createAuthHeader(node.twin_id, this.client.privateKey);
 
-    const data = await this.client.post<number>(this.nodeUri, node, { headers });
+    const data = await this.client.post<NodeRegistrationResponse>(this.nodeUri, node, { headers });
     return data;
   }
   async listNodes(filter: NodesFilter): Promise<Node[]> {

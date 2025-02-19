@@ -1,5 +1,5 @@
 import { RegistrarClient } from "../../client/client";
-import { Farm, FarmsFilter } from "./types";
+import { Farm, FarmCreationResponse, FarmsFilter } from "./types";
 import { createAuthHeader } from "../../utils";
 
 export class Farms {
@@ -10,7 +10,7 @@ export class Farms {
     this.client = client;
   }
 
-  async createFarm(farm: Partial<Farm>): Promise<number> {
+  async createFarm(farm: Partial<Farm>): Promise<FarmCreationResponse> {
     const twinID = farm.twin_id;
     if (!twinID) {
       throw new Error("TwinID is not found");
@@ -21,7 +21,7 @@ export class Farms {
     }
     const headers = createAuthHeader(twinID, this.client.privateKey);
 
-    const data = await this.client.post<number>(this.farmUri, farm, { headers });
+    const data = await this.client.post<FarmCreationResponse>(this.farmUri, farm, { headers });
     return data;
   }
 

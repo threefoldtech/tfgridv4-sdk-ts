@@ -1,11 +1,11 @@
 export interface Farm {
-  createdAt: string;
+  created_at: string;
   dedicated: boolean;
   farm_id: number;
   farm_name: string;
   nodes: any[];
   twin_id: number;
-  updatedAt: string;
+  updated_at: string;
 }
 export interface FarmsFilter {
   farm_name?: string;
@@ -13,4 +13,8 @@ export interface FarmsFilter {
   twin_id?: number;
   page?: number;
   size?: number;
+}
+
+export interface FarmCreationResponse{
+  farm_id: number;
 }
