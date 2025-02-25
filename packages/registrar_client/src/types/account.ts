@@ -1,4 +1,4 @@
-import { Farm } from "../farm/types";
+import { Farm } from "./farm";
 
 export interface Account {
   created_at: string;

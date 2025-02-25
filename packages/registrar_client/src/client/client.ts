@@ -1,8 +1,8 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
-import { Accounts } from "../modules/account/service";
-import { Farms } from "../modules/farm/service";
-import { Nodes } from "../modules/node/service";
-import { Zos } from "../modules/zos/service";
+import { Accounts } from "../modules/accounts";
+import { Farms } from "../modules/farms";
+import { Nodes } from "../modules/nodes";
+import { Zos } from "../modules/zos";
 
 export abstract class BaseClient {
   private client: AxiosInstance;

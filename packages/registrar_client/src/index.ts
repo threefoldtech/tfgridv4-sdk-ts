@@ -1,5 +1,5 @@
 export { RegistrarClient } from "./client/client";
 
-export * from "./modules/account/types";
-export * from "./modules/farm/types";
-export * from "./modules/node/types";
+export * from "./types/account";
+export * from "./types/farm";
+export * from "./types/node";
