@@ -2,14 +2,14 @@ import { describe, test, expect } from "@jest/globals";
 import tweetnacl from "tweetnacl";
 import base64 from "base64-js";
 import { RegistrarClient } from "../../src/client/client";
-import { UpdateAccountRequest } from "../../src/modules/account/types";
+import { UpdateAccountRequest } from "../../src/types/account";
 
 describe("test account module", () => {
   const keyPair = tweetnacl.sign.keyPair();
   const publicKey = base64.fromByteArray(keyPair.publicKey);
   const privateKey = base64.fromByteArray(keyPair.secretKey);
 
-  const client = new RegistrarClient({ baseURL: "http://registrar:8080/v1", privateKey: privateKey });
+  const client = new RegistrarClient({ baseURL: "http://localhost:8080/v1", privateKey: privateKey });
 
   let twinID = 1;
   test("create account", async () => {
@@ -18,6 +18,10 @@ describe("test account module", () => {
     if (account) {
       twinID = account.twin_id;
     }
+  });
+
+  test("create account with same private key", async () => {
+    await expect(client.accounts.createAccount({})).rejects.toThrowError("Failed to create account: 409 Conflict");
   });
 
   test("get account by public key", async () => {

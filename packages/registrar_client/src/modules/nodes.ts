@@ -18,6 +18,7 @@ export class Nodes {
   }
 
   async registerNode(node: NodeRegistrationRequest): Promise<NodeRegistrationResponse> {
+    this._validateNodeData(node);
     const headers = createAuthHeader(node.twin_id, this.client.privateKey);
     try {
       const data = await this.client.post<NodeRegistrationResponse>(this.nodeUri, node, { headers });
@@ -65,5 +66,62 @@ export class Nodes {
     } catch (e: any) {
       throw new Error(`Failed to report node uptime: ${e.response?.status} ${e.response?.statusText}`);
     }
+  }
+
+  _validateNodeData(node: NodeRegistrationRequest): void {
+    if (node.twin_id <= 0) {
+      throw new Error("Invalid node: twinId");
+    }
+    if (node.farm_id <= 0) {
+      throw new Error("Invalid node: farmId");
+    }
+    this._validateResources(node.resources);
+    this._validateLocation(node.location);
+    node.interfaces.forEach(iface => {
+      this._validateIp(iface.ips);
+      this._validateMac(iface.mac);
+    });
+  }
+
+  _validateResources(resources: any): void {
+    ["cru", "hru", "mru", "sru"].forEach(key => {
+      if (resources[key] < 0) {
+        throw new Error(`Invalid resources: ${key}`);
+      }
+    });
+  }
+
+  _validateLocation(location: any): void {
+    ["city", "country", "latitude", "longitude"].forEach(key => {
+      if (location[key].length === 0) {
+        throw new Error(`Invalid location: ${key}`);
+      }
+    });
+  }
+
+  _validateIp(ip: string): void {
+    const parts = ip.split(".");
+    if (parts.length !== 4) {
+      throw new Error("Invalid interfaces: ips");
+    }
+    parts.forEach(part => {
+      const num = parseInt(part);
+      if (isNaN(num) || num < 0 || num > 255) {
+        throw new Error("Invalid interfaces: ips");
+      }
+    });
+  }
+
+  _validateMac(mac: string): void {
+    const parts = mac.split(":");
+    if (parts.length !== 6) {
+      throw new Error("Invalid interfaces: mac");
+    }
+    parts.forEach(part => {
+      const num = parseInt(part, 16);
+      if (isNaN(num) || num < 0 || num > 255) {
+        throw new Error("Invalid interfaces: mac");
+      }
+    });
   }
 }

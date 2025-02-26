@@ -13,19 +13,17 @@ export class Farms {
     this.client = client;
   }
 
-  async createFarm(farm: Partial<Farm>): Promise<FarmCreationResponse> {
-    const twinID = farm.twin_id;
-    if (!twinID) {
-      throw new Error("TwinID is not found");
+  async createFarm(farmName: string, dedicated: boolean, twinID: number): Promise<FarmCreationResponse> {
+    if (twinID <= 0) {
+      throw new Error("Invalid twinId");
     }
-    const farmName = farm.farm_name;
     if (!farmName || farmName.length <= MIN_FARM_NAME_LENGTH || farmName.length >= MAX_FARM_NAME_LENGTH) {
       throw new Error(
         `Farm name must have minimum ${MIN_FARM_NAME_LENGTH} and maximum ${MAX_FARM_NAME_LENGTH} characters`,
       );
     }
+    const farm = { farm_name: farmName, dedicated, twin_id: twinID };
     const headers = createAuthHeader(twinID, this.client.privateKey);
-
     try {
       const data = await this.client.post<FarmCreationResponse>(this.farmUri, farm, { headers });
       return data;

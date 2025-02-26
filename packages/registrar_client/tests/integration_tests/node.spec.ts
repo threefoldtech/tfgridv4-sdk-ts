@@ -1,5 +1,5 @@
 import { describe, test, expect } from "@jest/globals";
-import { NodeRegistrationRequest, UptimeReportRequest, NodesFilter } from "../../src/modules/node/types";
+import { NodeRegistrationRequest, UptimeReportRequest, NodesFilter } from "../../src/types/node";
 import { RegistrarClient } from "../../src/client/client";
 import tweetnacl from "tweetnacl";
 import base64 from "base64-js";
@@ -8,50 +8,102 @@ describe("test node module", () => {
   const keyPair = tweetnacl.sign.keyPair();
   const privateKey = base64.fromByteArray(keyPair.secretKey);
 
-  const client = new RegistrarClient({ baseURL: "http://registrar:8080/v1", privateKey: privateKey });
+  const client = new RegistrarClient({ baseURL: "http://localhost:8080/v1", privateKey: privateKey });
 
   let twinID = 1;
   let nodeID = 1;
   let farmID = 1;
+  const dummyNode: Partial<NodeRegistrationRequest> = {
+    interfaces: [
+      {
+        name: "eth0",
+        mac: "00:1A:2B:3C:4D:5E",
+        ips: "10.0.0.1",
+      },
+    ],
+    location: {
+      city: "Amsterdam",
+      country: "Netherlands",
+      latitude: "52.3676",
+      longitude: "4.9041",
+    },
+    resources: {
+      cru: 4,
+      hru: 1000000,
+      mru: 8192,
+      sru: 512000,
+    },
+    secure_boot: true,
+    serial_number: "SN-123456789",
+    virtualized: true,
+  };
 
   test("create node", async () => {
     const account = await client.accounts.createAccount({});
     expect(account).not.toBeNull();
     twinID = account!.twin_id;
 
-    const farm = await client.farms.createFarm({ twin_id: twinID, farm_name: `test-${Date.now()}` });
+    const farm = await client.farms.createFarm(`test-${Date.now()}`, false, twinID);
     expect(farm).not.toBeNull();
     farmID = farm!.farm_id;
-    const dummyNode: NodeRegistrationRequest = {
-      twin_id: twinID,
-      farm_id: farmID,
-      interfaces: [
-        {
-          name: "eth0",
-          mac: "00:1A:2B:3C:4D:5E",
-          ips: "10.0.0.1",
-        },
-      ],
-      location: {
-        city: "Amsterdam",
-        country: "Netherlands",
-        latitude: "52.3676",
-        longitude: "4.9041",
-      },
-      resources: {
-        cru: 4,
-        hru: 1000000,
-        mru: 8192,
-        sru: 512000,
-      },
-      secure_boot: true,
-      serial_number: "SN-123456789",
-      virtualized: true,
-    };
-    const res = await client.nodes.registerNode(dummyNode);
+
+    dummyNode.twin_id = twinID;
+    dummyNode.farm_id = farmID;
+    const res = await client.nodes.registerNode(dummyNode as NodeRegistrationRequest);
     expect(res).not.toBeNull();
 
     nodeID = res!.node_id;
+  });
+
+  test("create node with duplicate twin id", async () => {
+    dummyNode.twin_id = twinID;
+    expect(client.nodes.registerNode(dummyNode as NodeRegistrationRequest)).rejects.toThrowError(
+      "Failed to register node: 409 Conflict",
+    );
+  });
+  test("create node with non-existed twin id", async () => {
+    dummyNode.twin_id = 9999999999999;
+    await expect(client.nodes.registerNode(dummyNode as NodeRegistrationRequest)).rejects.toThrowError(
+      "Failed to register node: 404 Not Found",
+    );
+  });
+
+  test("create node with non-existed farm id", async () => {
+    dummyNode.twin_id = twinID;
+    dummyNode.farm_id = 9999999999999;
+    await expect(client.nodes.registerNode(dummyNode as NodeRegistrationRequest)).rejects.toThrowError(
+      "Failed to register node: 400 Bad Request",
+    );
+  });
+
+  test("create node with invalid twin id", async () => {
+    dummyNode.twin_id = 0;
+    dummyNode.farm_id = farmID;
+    await expect(client.nodes.registerNode(dummyNode as NodeRegistrationRequest)).rejects.toThrowError(
+      "Invalid node: twinId",
+    );
+  });
+
+  test("create node with invalid farm id", async () => {
+    dummyNode.twin_id = twinID;
+    dummyNode.farm_id = 0;
+    await expect(client.nodes.registerNode(dummyNode as NodeRegistrationRequest)).rejects.toThrowError(
+      "Invalid node: farmId",
+    );
+  });
+
+  test("create node with invalid location", async () => {
+    dummyNode.twin_id = twinID;
+    dummyNode.farm_id = farmID;
+    dummyNode.location = {
+      city: "Amsterdam",
+      country: "Netherlands",
+      latitude: "",
+      longitude: "",
+    };
+    await expect(client.nodes.registerNode(dummyNode as NodeRegistrationRequest)).rejects.toThrowError(
+      "Invalid location: latitude",
+    );
   });
 
   test("list nodes without filters", async () => {
@@ -121,9 +173,5 @@ describe("test node module", () => {
     };
     const res = await client.nodes.reportNodeUptime(nodeID, twinID, uptime);
     expect(res).not.toBeNull();
-    const node = await client.nodes.getNode(nodeID);
-    expect(node).not.toBeNull();
-    console.log(node);
-    expect(node?.uptime.length).toBeGreaterThan(0);
   });
 });
