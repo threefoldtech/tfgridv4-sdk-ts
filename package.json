@@ -4,6 +4,9 @@
   "workspaces": [
     "packages/*"
   ],
+  "engines": {
+    "node": ">=20.10.0"
+  },
   "dependencies": {
     "cosmiconfig": "^9.0.0",
     "globals": "^15.15.0"

@@ -6,6 +6,9 @@
   "author": "Salma Elsoly <salmaelsoly@gmail.com>",
   "license": "ISC",
   "main": "./dist/src/index.js",
+  "engines": {
+    "node": ">=20.10.0"
+  },
   "directories": {
     "lib": "src",
     "test": "tests"
