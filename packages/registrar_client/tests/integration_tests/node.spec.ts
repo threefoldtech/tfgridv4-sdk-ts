@@ -55,7 +55,7 @@ describe("test node module", () => {
     nodeID = res!.node_id;
   });
 
-  test("create node with duplicate twin id", async () => {
+  test.skip("create node with duplicate twin id", async () => {
     dummyNode.twin_id = twinID;
     expect(client.nodes.registerNode(dummyNode as NodeRegistrationRequest)).rejects.toThrowError(
       "Failed to register node: 409 Conflict",

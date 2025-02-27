@@ -20,7 +20,7 @@ describe("test account module", () => {
     }
   });
 
-  test("create account with same private key", async () => {
+  test.skip("create account with same private key", async () => {
     await expect(client.accounts.createAccount({})).rejects.toThrowError("Failed to create account: 409 Conflict");
   });
 

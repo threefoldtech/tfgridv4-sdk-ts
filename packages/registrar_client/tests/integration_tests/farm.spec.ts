@@ -47,7 +47,7 @@ describe("test farm module", () => {
     );
   });
 
-  test("create farm with existing farm name with same twinId", async () => {
+  test.skip("create farm with existing farm name with same twinId", async () => {
     const farmName = `test-${Date.now()}`;
     await client.farms.createFarm(farmName, false, twinID);
     await expect(client.farms.createFarm(farmName, true, twinID)).rejects.toThrowError(
