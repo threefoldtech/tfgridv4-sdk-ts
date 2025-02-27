@@ -72,6 +72,6 @@ export interface UptimeReportRequest {
   uptime: number;
 }
 
-export interface NodeRegistrationResponse{
+export interface NodeRegistrationResponse {
   node_id: number;
 }

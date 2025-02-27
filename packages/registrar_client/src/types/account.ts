@@ -19,6 +19,6 @@ export interface CreateAccountRequest {
 }
 
 export interface UpdateAccountRequest {
-  relays: string[];
-  rmb_enc_key: string;
+  relays?: string[];
+  rmb_enc_key?: string;
 }

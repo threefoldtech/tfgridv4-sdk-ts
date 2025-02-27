@@ -15,6 +15,6 @@ export interface FarmsFilter {
   size?: number;
 }
 
-export interface FarmCreationResponse{
+export interface FarmCreationResponse {
   farm_id: number;
 }

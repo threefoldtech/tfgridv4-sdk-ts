@@ -49,6 +49,7 @@ export class Nodes {
   }
 
   async updateNode(nodeID: number, twinID: number, node: UpdateNodeRequest): Promise<any> {
+    this._validateNodeData(node);
     const headers = createAuthHeader(twinID, this.client.privateKey);
     try {
       const data = await this.client.patch<Node>(`${this.nodeUri}/${nodeID}`, node, { headers });
@@ -68,8 +69,8 @@ export class Nodes {
     }
   }
 
-  _validateNodeData(node: NodeRegistrationRequest): void {
-    if (node.twin_id <= 0) {
+  _validateNodeData(node: NodeRegistrationRequest | UpdateNodeRequest): void {
+    if ("twin_id" in node && node.twin_id <= 0) {
       throw new Error("Invalid node: twinId");
     }
     if (node.farm_id <= 0) {
