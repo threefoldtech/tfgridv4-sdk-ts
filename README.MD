@@ -10,6 +10,7 @@ This repo contains the typescript clients and projects for Threefold gridV4.
 
 - [Node.js](https://nodejs.org/) (version 20 or higher)
 - [lerna](https://lerna.js.org/) (version 8.1.9 or higher)
+- [yarn](https://yarnpkg.com/)    (version 4.7.0)
 
 ## Install
 

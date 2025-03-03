@@ -1,5 +1,5 @@
 {
-  "name": "root",
+  "name": "@threefold/root",
   "private": true,
   "workspaces": [
     "packages/*"
@@ -21,5 +21,6 @@
     "prettier": "^3.5.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
-  }
+  },
+  "packageManager": "yarn@4.7.0"
 }

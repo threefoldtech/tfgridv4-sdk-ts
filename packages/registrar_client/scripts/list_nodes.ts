@@ -1,4 +1,5 @@
 import { RegistrarClient, NodesFilter } from "../src/";
+import config from "./config.json";
 
 async function listNodes(client: RegistrarClient, filter: NodesFilter) {
   const nodes = await client.nodes.listNodes(filter);
@@ -8,8 +9,7 @@ async function listNodes(client: RegistrarClient, filter: NodesFilter) {
 }
 
 async function main() {
-  const privateKey = "private_key";
-  const client = new RegistrarClient({ baseURL: "https://registrar.grid.tf/v1/", privateKey: privateKey });
+  const client = new RegistrarClient({ baseURL: config.baseUrl, privateKey: config.privateKey });
   const filter: NodesFilter = {
     farm_id: 70,
   };

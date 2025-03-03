@@ -42,7 +42,7 @@ describe("test farm module", () => {
   });
 
   test("create farm with non-existing twin id", async () => {
-    await expect(client.farms.createFarm("test",false, twinID+1)).rejects.toThrowError(
+    await expect(client.farms.createFarm("test",false, twinID+20)).rejects.toThrowError(
       "Failed to create farm: 404 Not Found",
     );
   });

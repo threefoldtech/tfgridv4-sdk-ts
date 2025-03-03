@@ -1,7 +1,7 @@
 import { log } from "console";
 import { Account, RegistrarClient, NodeRegistrationRequest } from "../src/";
-import tweetnacl from "tweetnacl";
-import base64 from "base64-js";
+import config from "./config.json";
+
 
 async function createAccount(client: RegistrarClient): Promise<Account> {
   const account = await client.accounts.createAccount({});
@@ -35,10 +35,7 @@ async function getNode(client: RegistrarClient, nodeID: number) {
 }
 
 async function main() {
-  const keyPair = tweetnacl.sign.keyPair();
-  const privateKey = base64.fromByteArray(keyPair.secretKey);
-  log(privateKey);
-  const client = new RegistrarClient({ baseURL: "https://registrar.grid.tf/v1/", privateKey: privateKey });
+  const client = new RegistrarClient({ baseURL: config.baseUrl, privateKey: config.privateKey });
   const account = await createAccount(client);
   const twinID = account.twin_id;
   const farmID = await createFarm(client, twinID);

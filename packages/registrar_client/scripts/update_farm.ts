@@ -1,5 +1,6 @@
 import { log } from "console";
 import { RegistrarClient } from "../src/";
+import config from "./config.json";
 
 async function updateFarm(client: RegistrarClient, twinID: number, farmID: number, farmName: string) {
   const farm = await client.farms.updateFarm(farmID, twinID, farmName);
@@ -16,8 +17,7 @@ async function getFarm(client: RegistrarClient, farmID: number) {
 }
 
 async function main() {
-  const privateKey = "private_key";
-  const client = new RegistrarClient({ baseURL: "https://registrar.grid.tf/v1/", privateKey: privateKey });
+  const client = new RegistrarClient({ baseURL: config.baseUrl, privateKey: config.privateKey });
   const twinID = 64;
   const farmID = 94;
   const farmName = "test-farm";

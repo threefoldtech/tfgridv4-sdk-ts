@@ -1,9 +1,11 @@
+import { Node } from "./node";
+
 export interface Farm {
   created_at: string;
   dedicated: boolean;
   farm_id: number;
   farm_name: string;
-  nodes: any[];
+  nodes: Node[];
   twin_id: number;
   updated_at: string;
 }

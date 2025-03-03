@@ -1,5 +1,6 @@
 import { log } from "console";
 import { UpdateNodeRequest, RegistrarClient } from "../src/";
+import config from "./config.json";
 
 async function updateNode(client: RegistrarClient, twinID: number, nodeID: number, update: UpdateNodeRequest) {
   const account = await client.nodes.updateNode(nodeID, twinID, update);
@@ -16,8 +17,7 @@ async function getNode(client: RegistrarClient, nodeID: number) {
 }
 
 async function main() {
-  const privateKey = "QjWTJjjuOJ/KHRo43lKobC9q7ly+3gESVuEXm/t2PFG/d3lrmo/c/C7eRob5qIri2SqqV/tLZRhebLS3hSHRbQ==";
-  const client = new RegistrarClient({ baseURL: "https://registrar.grid.tf/v1/", privateKey: privateKey });
+  const client = new RegistrarClient({ baseURL: config.baseUrl, privateKey: config.privateKey });
   const update: UpdateNodeRequest = {
     farm_id: 94,
     interfaces: [
