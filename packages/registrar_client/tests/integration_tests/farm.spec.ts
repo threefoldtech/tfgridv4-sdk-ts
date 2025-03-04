@@ -1,13 +1,11 @@
 import { describe, test, expect } from "@jest/globals";
-import tweetnacl from "tweetnacl";
-import base64 from "base64-js";
 import { RegistrarClient } from "../../src/client/client";
+import { generateKeypair } from "../utils";
+import config from "../config.json";
 
 describe("test farm module", () => {
-  const keyPair = tweetnacl.sign.keyPair();
-  const privateKey = base64.fromByteArray(keyPair.secretKey);
-
-  const client = new RegistrarClient({ baseURL: "http://localhost:8080/v1", privateKey: privateKey });
+  const { privateKey } = generateKeypair();
+  const client = new RegistrarClient({ baseURL: config.baseUrl, privateKey: privateKey });
 
   let twinID = 1;
   let farmID = 1;

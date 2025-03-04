@@ -1,21 +1,15 @@
 {
   "compilerOptions": {
-    /* Language and Environment */
     "target": "ESNext",
+    "module": "esnext",
+    "outDir": "./dist/es",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
-
-    /* Modules */
-    "module": "commonjs",
-    /* Emit */
-
-    "outDir": "./dist",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "declaration": true,
-
-    /* Type Checking */
     "strict": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
   },
   "include": ["./src", "scripts"],
   "exclude": ["./tests"]

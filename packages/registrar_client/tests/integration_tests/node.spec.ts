@@ -1,14 +1,13 @@
 import { describe, test, expect } from "@jest/globals";
 import { NodeRegistrationRequest, UptimeReportRequest, NodesFilter } from "../../src/types/node";
 import { RegistrarClient } from "../../src/client/client";
-import tweetnacl from "tweetnacl";
-import base64 from "base64-js";
+import { generateKeypair } from "../utils";
+import config from "../config.json";
 
 describe("test node module", () => {
-  const keyPair = tweetnacl.sign.keyPair();
-  const privateKey = base64.fromByteArray(keyPair.secretKey);
+  const { privateKey } = generateKeypair();
 
-  const client = new RegistrarClient({ baseURL: "http://localhost:8080/v1", privateKey: privateKey });
+  const client = new RegistrarClient({ baseURL: config.baseUrl, privateKey: privateKey });
 
   let twinID = 1;
   let nodeID = 1;

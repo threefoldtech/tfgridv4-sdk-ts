@@ -1,15 +1,12 @@
 import { describe, test, expect } from "@jest/globals";
-import tweetnacl from "tweetnacl";
-import base64 from "base64-js";
 import { RegistrarClient } from "../../src/client/client";
 import { UpdateAccountRequest } from "../../src/types/account";
-
+import { generateKeypair } from "../utils";
+import config from "../config.json";
 describe("test account module", () => {
-  const keyPair = tweetnacl.sign.keyPair();
-  const publicKey = base64.fromByteArray(keyPair.publicKey);
-  const privateKey = base64.fromByteArray(keyPair.secretKey);
+  const { publicKey, privateKey } = generateKeypair();
 
-  const client = new RegistrarClient({ baseURL: "http://localhost:8080/v1", privateKey: privateKey });
+  const client = new RegistrarClient({ baseURL: config.baseUrl, privateKey: privateKey });
 
   let twinID = 1;
   test("create account", async () => {

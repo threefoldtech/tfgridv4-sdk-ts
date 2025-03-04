@@ -5,8 +5,15 @@
   "keywords": [],
   "author": "Salma Elsoly <salmaelsoly@gmail.com>",
   "license": "ISC",
-  "main": "./dist/src/index.js",
-  "types": "./dist/src/index.d.ts",
+  "main": "./dist/node/src/index.js",
+  "module": "./dist/es/src/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/es/src/index.js",
+      "require": "./dist/node/src/index.js"
+    }
+  },
+  "types": "./dist/es/src/index.d.ts",
   "engines": {
     "node": ">=20.10.0"
   },
@@ -15,7 +22,7 @@
     "test": "tests"
   },
   "files": [
-    "dist"
+    "/dist"
   ],
   "repository": {
     "type": "git",
@@ -25,7 +32,9 @@
     "test": "jest",
     "format": "prettier --write .",
     "lint": "eslint src/**/*.ts",
-    "build": "tsc"
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "node-build": "tsc --build tsconfig-node.json",
+    "es-build": "tsc --build tsconfig-es.json"
   },
   "bugs": {
     "url": "https://github.com/threefoldtech/tfgridv4-sdk-ts/issues"

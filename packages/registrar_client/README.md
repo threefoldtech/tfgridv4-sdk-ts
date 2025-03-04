@@ -85,7 +85,7 @@ more example script can be found [here](./scripts/)
 
 ## Tests
 
-before running tests make sure to set base url of the client in test file
+- Before running the tests set your base url in `tests/config.json`
 
 then run with:
 
