@@ -1,25 +1,31 @@
 {
-  "name": "dashboard",
+  "name": "@threefold/dashboard",
   "type": "module",
   "version": "0.1.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/threefoldtech/tfgridv4-sdk-ts.git"
   },
+  "main": "dist/index.js",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "build-only": "vite build",
-    "type-check": "vue-tsc --build --force"
+    "type-check": "vue-tsc --build --force",
+    "format": "prettier --write .",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix"
   },
   "dependencies": {
     "@mdi/font": "7.4.47",
+    "@threefold/registrar_client": "0.1.0",
+    "buffer": "^6.0.3",
+    "pinia": "^3.0.1",
     "roboto-fontface": "*",
     "tweetnacl": "^1.0.3",
     "vue": "^3.4.31",
-    "vuetify": "^3.6.14",
-    "registrar_client": "0.1.0"
+    "vuetify": "^3.6.14"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.0",

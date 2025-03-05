@@ -8,5 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Auth: typeof import('./src/components/Auth.vue')['default']
+    FarmList: typeof import('./src/components/FarmList.vue')['default']
+    Navbar: typeof import('./src/components/Navbar.vue')['default']
   }
 }
