@@ -21,7 +21,7 @@ export class Nodes {
     this._validateNodeData(node);
     const headers = createAuthHeader(node.twin_id, this.client.privateKey);
     try {
-      const data = await this.client.post<NodeRegistrationResponse>(this.nodeUri, node, { headers });
+      const data = await this.client.post<NodeRegistrationResponse>(`${this.nodeUri}/`, node, { headers });
       return data;
     } catch (e: any) {
       throw new Error(`Failed to register node: ${e.response?.status} ${e.response?.statusText}`);
@@ -30,7 +30,7 @@ export class Nodes {
 
   async listNodes(filter: NodesFilter): Promise<Node[]> {
     try {
-      const data = await this.client.get<Node[]>(this.nodeUri, {
+      const data = await this.client.get<Node[]>(`${this.nodeUri}/`, {
         params: filter,
       });
       return data;

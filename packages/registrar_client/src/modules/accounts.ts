@@ -26,7 +26,7 @@ export class Accounts {
     request.signature = signature;
     request.timestamp = timestamp;
     try {
-      const data = await this.client.post<Account>(this.accountUri, request);
+      const data = await this.client.post<Account>(`${this.accountUri}/`, request);
       return data;
     } catch (e: any) {
       throw new Error(`Failed to create account: ${e.response?.status} ${e.response?.statusText}`);
@@ -35,7 +35,7 @@ export class Accounts {
 
   async getAccountByPublicKey(publicKey: string): Promise<Account> {
     try {
-      const data = await this.client.get<Account>(this.accountUri, {
+      const data = await this.client.get<Account>(`${this.accountUri}/`, {
         params: {
           public_key: publicKey,
         },
@@ -48,7 +48,7 @@ export class Accounts {
 
   async getAccountByTwinId(twinId: number): Promise<Account> {
     try {
-      const data = await this.client.get<Account>(this.accountUri, {
+      const data = await this.client.get<Account>(`${this.accountUri}`, {
         params: {
           twin_id: twinId,
         },

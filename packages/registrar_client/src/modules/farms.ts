@@ -25,7 +25,7 @@ export class Farms {
     const farm = { farm_name: farmName, dedicated, twin_id: twinID };
     const headers = createAuthHeader(twinID, this.client.privateKey);
     try {
-      const data = await this.client.post<FarmCreationResponse>(this.farmUri, farm, { headers });
+      const data = await this.client.post<FarmCreationResponse>(`${this.farmUri}/`, farm, { headers });
       return data;
     } catch (e: any) {
       throw new Error(`Failed to create farm: ${e.response?.status} ${e.response?.statusText}`);
@@ -34,7 +34,7 @@ export class Farms {
 
   async listFarms(filter: FarmsFilter): Promise<Farm[]> {
     try {
-      const data = await this.client.get<Farm[]>(this.farmUri, { params: filter });
+      const data = await this.client.get<Farm[]>(`${this.farmUri}/`, { params: filter });
       return data;
     } catch (e: any) {
       throw new Error(`Failed to list farms: ${e.response?.status} ${e.response?.statusText}`);
