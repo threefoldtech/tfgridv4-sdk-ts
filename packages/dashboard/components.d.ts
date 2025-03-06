@@ -10,5 +10,7 @@ declare module 'vue' {
     Auth: typeof import('./src/components/Auth.vue')['default']
     FarmList: typeof import('./src/components/FarmList.vue')['default']
     Navbar: typeof import('./src/components/Navbar.vue')['default']
+    RouterLink: typeof import('vue-router')['RouterLink']
+    RouterView: typeof import('vue-router')['RouterView']
   }
 }
