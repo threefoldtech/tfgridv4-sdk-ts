@@ -24,13 +24,19 @@
               >
             </v-col>
             <v-col cols="2">
-              <v-btn @click="submitSeed" :disabled="!seed || isSubmitting" size="small" block variant="outlined" class="text-normal">
+              <v-btn
+                @click="submitSeed"
+                :disabled="!seed || isSubmitting"
+                size="small"
+                block
+                variant="outlined"
+                class="text-normal"
+                color="primary"
+              >
                 <template v-if="isSubmitting">
                   <v-progress-circular indeterminate size="20" />
                 </template>
-                <template v-else>
-                  Submit
-                </template>
+                <template v-else> Submit </template>
               </v-btn>
             </v-col>
           </v-row>
@@ -54,7 +60,6 @@ const showPassword = ref<boolean>(false);
 const isGeneratingSeed = ref<boolean>(false);
 const account = ref<Account | null>(null);
 const isSubmitting = ref<boolean>(false);
-
 
 const generateSeed = () => {
   const privateKey = tweetnacl.sign.keyPair();

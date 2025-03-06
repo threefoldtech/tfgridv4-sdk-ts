@@ -25,6 +25,7 @@
     "roboto-fontface": "*",
     "tweetnacl": "^1.0.3",
     "vue": "^3.4.31",
+    "vue-router": "^4.5.0",
     "vuetify": "^3.6.14"
   },
   "devDependencies": {

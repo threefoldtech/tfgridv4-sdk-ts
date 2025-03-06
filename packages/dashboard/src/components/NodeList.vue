@@ -1,16 +1,11 @@
 <template>
   <v-col cols="6">
     <v-card>
-      <v-card-title>Farm List</v-card-title>
+      <v-card-title> Node List </v-card-title>
       <v-card-text>
         <v-row class="mb-2">
           <v-col cols="3">
-            <v-text-field
-              v-model="filter.farm_name"
-              label="Farm Name"
-              density="compact"
-              variant="outlined"
-            ></v-text-field>
+            <v-text-field v-model="filter.node_id" label="Node ID" density="compact" variant="outlined"></v-text-field>
           </v-col>
           <v-col cols="3">
             <v-text-field v-model="filter.farm_id" label="Farm ID" density="compact" variant="outlined"></v-text-field>
@@ -24,23 +19,41 @@
               variant="outlined"
               size="small"
               class="mr-2"
-              :disabled="!filter.farm_name && !filter.farm_id && !filter.twin_id"
+              :disabled="!filter.node_id && !filter.farm_id && !filter.twin_id"
             >
               Clear
             </v-btn>
-            <v-btn @click="applyFilters" variant="outlined" size="small">Apply</v-btn>
+            <v-btn @click="applyFilters" variant="outlined" size="small"> Apply </v-btn>
           </v-col>
         </v-row>
 
         <v-data-table-server
-          :headers="headers"
           v-model:items-per-page="filter.size"
           :items-length="100"
-          :items="farms"
+          :items="nodes"
           @update:options="updateOptions"
           class="border-thin"
+          hide-default-header
           height="500"
         >
+          <template v-slot:item="{ item }">
+            <v-card class="mb-2" color="grey-darken-3">
+              <v-card-title class="text-subtitle-1">
+                Node ID: {{ item.node_id }}
+                <v-chip color="primary" variant="tonal">{{ item.location.country }}</v-chip>
+              </v-card-title>
+              <v-card-text>
+                <v-row>
+                  <v-col cols="6">CPU: {{ item.resources.cru }}</v-col>
+                  <v-col cols="6">Memory: {{ item.resources.mru }}</v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="6">SSD Disk: {{ item.resources.sru }}</v-col>
+                  <v-col cols="6">HDD Disk: {{ item.resources.hru }}</v-col>
+                </v-row>
+              </v-card-text>
+            </v-card>
+          </template>
         </v-data-table-server>
       </v-card-text>
     </v-card>
@@ -48,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import { type FarmsFilter, type Farm } from "@threefold/registrar_client";
+import { type NodesFilter, type Node } from "@threefold/registrar_client";
 import { useRegistrarStore } from "@/stores/registrar";
 import { ref, computed, watch } from "vue";
 
@@ -56,16 +69,17 @@ const registrarStore = useRegistrarStore();
 
 const twinID = computed(() => registrarStore.twinID);
 
-const filter = ref<FarmsFilter>({ page: 1, size: 10 });
-const farms = ref<Farm[]>([]);
+const filter = ref<NodesFilter>({
+  page: 1,
+  size: 10,
+});
+const nodes = ref<Node[]>([]);
 const headers = [
-  { title: "ID", key: "farm_id" },
-  { title: "Farm Name", key: "farm_name" },
-  { title: "Dedicated", key: "dedicated" },
-  { title: "Created At", key: "created_at" },
-  { title: "Updated At", key: "updated_at" },
+  { title: "Node ID", key: "node_id" },
+  { title: "Farm ID", key: "farm_id" },
+  { title: "Created", key: "created" },
+  { title: "Updated", key: "updated" },
 ];
-
 const clearFilters = async () => {
   filter.value = {
     page: filter.value.page,
@@ -76,7 +90,7 @@ const clearFilters = async () => {
 
 const applyFilters = async () => {
   try {
-    farms.value = await registrarStore.client!.farms.listFarms(filter.value);
+    nodes.value = await registrarStore.client!.nodes.listNodes(filter.value);
   } catch (e) {
     console.error(e);
   }

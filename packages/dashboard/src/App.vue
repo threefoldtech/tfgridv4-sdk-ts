@@ -1,7 +1,13 @@
 <template>
   <v-app>
+    <Navbar />
     <v-main>
-      <Navbar />
+      <v-container fluid class="h-screen overflow-hidden">
+        <v-row justify="center">
+          <FarmList />
+          <NodeList />
+        </v-row>
+      </v-container>
       <Auth />
     </v-main>
   </v-app>
