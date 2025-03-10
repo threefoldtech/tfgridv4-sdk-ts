@@ -1,9 +1,6 @@
 {
   "name": "@threefold/root",
-  "publishConfig": {
-    "access": "public"
-  },
-  "private": false,
+  "private": true,
   "workspaces": [
     "packages/*"
   ],

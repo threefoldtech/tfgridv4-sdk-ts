@@ -48,7 +48,7 @@ export class Accounts {
 
   async getAccountByTwinId(twinId: number): Promise<Account> {
     try {
-      const data = await this.client.get<Account>(`${this.accountUri}`, {
+      const data = await this.client.get<Account>(`${this.accountUri}/`, {
         params: {
           twin_id: twinId,
         },
