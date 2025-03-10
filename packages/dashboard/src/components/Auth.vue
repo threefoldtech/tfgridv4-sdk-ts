@@ -52,6 +52,7 @@ import { RegistrarClient, type Account } from "@threefold/registrar_client";
 import { useRegistrarStore } from "@/stores/registrar";
 import { ref } from "vue";
 import base64 from "base64-js";
+import { toast } from "vue3-toastify";
 
 const registrarStore = useRegistrarStore();
 const dialog = ref<boolean>(registrarStore.twinID === null ? true : false);
@@ -67,6 +68,18 @@ const generateSeed = () => {
   isGeneratingSeed.value = true;
 };
 
+const createAccount = async () => {
+  try {
+    account.value = await registrarStore.client!.accounts.createAccount({});
+    toast.success("Account created successfully");
+  } catch (e) {
+    toast.error("Failed to create account");
+    isSubmitting.value = false;
+  }
+  registrarStore.setTwinID(account.value!.twin_id);
+  dialog.value = false;
+};
+
 const submitSeed = async () => {
   isSubmitting.value = true;
   registrarStore.setClient(
@@ -75,14 +88,10 @@ const submitSeed = async () => {
   const publicKey = tweetnacl.sign.keyPair.fromSecretKey(base64.toByteArray(seed.value)).publicKey;
   try {
     account.value = await registrarStore.client!.accounts.getAccountByPublicKey(base64.fromByteArray(publicKey));
-    console.log(account.value.twin_id);
   } catch (error: any) {
-    console.error(error);
-    if (error.message.includes("404")) {
-      account.value = await registrarStore.client!.accounts.createAccount({});
-    }
+    await createAccount();
   }
-  registrarStore.setTwinID(account.value!.twin_id);
-  dialog.value = false;
+
 };
+
 </script>

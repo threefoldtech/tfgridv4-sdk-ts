@@ -26,6 +26,7 @@
     "tweetnacl": "^1.0.3",
     "vue": "^3.4.31",
     "vue-router": "^4.5.0",
+    "vue3-toastify": "^0.2.8",
     "vuetify": "^3.6.14"
   },
   "devDependencies": {
@@ -41,6 +42,7 @@
     "unplugin-fonts": "^1.1.1",
     "unplugin-vue-components": "^0.27.2",
     "vite": "^5.4.10",
+    "vite-plugin-node-polyfills": "^0.23.0",
     "vite-plugin-vuetify": "^2.0.3",
     "vue-tsc": "^2.1.10"
   }

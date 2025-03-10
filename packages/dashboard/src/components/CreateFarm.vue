@@ -10,6 +10,12 @@
             required
             :rules="[v => !!v || 'Farm name is required']"
           ></v-text-field>
+          <v-text-field
+          v-model="stellarAddress"
+          label="Stellar Address"
+            required
+            :rules="[v => !!v || 'Stellar address is required', v => v.startsWith('G') || 'Stellar address must begin with G']"
+          ></v-text-field>
           <v-checkbox v-model="dedicated" label="Dedicated"></v-checkbox>
           <v-divider class="mb-2"></v-divider>
           <v-row justify="end">
@@ -38,6 +44,8 @@
 <script setup lang="ts">
 import { ref, defineProps, defineEmits } from "vue";
 import { useRegistrarStore } from "@/stores/registrar";
+import { toast } from "vue3-toastify";
+
 
 const props = defineProps({
   dialog: Boolean,
@@ -47,6 +55,7 @@ const emit = defineEmits(["update:dialog"]);
 
 const isSubmitting = ref<boolean>(false);
 const name = ref<string>("");
+const stellarAddress = ref<string>("");
 const dedicated = ref<boolean>(false);
 const registrarStore = useRegistrarStore();
 
@@ -57,11 +66,13 @@ const handleDialogUpdate = (value: boolean) => {
 const submitFarm = async () => {
   isSubmitting.value = true;
   try {
-    await registrarStore.client!.farms.createFarm(name.value, dedicated.value, registrarStore.twinID!);
+    await registrarStore.client!.farms.createFarm(name.value, dedicated.value, registrarStore.twinID!, stellarAddress.value);
+    toast.success("Farm created successfully");
   } catch (e) {
-    console.error(e);
+    toast.error("Failed to create farm");
+    
   }
-  isSubmitting.value = false;
   handleDialogUpdate(false);
+  isSubmitting.value = false;
 };
 </script>

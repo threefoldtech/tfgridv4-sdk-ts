@@ -20,13 +20,6 @@
           </v-col>
           <v-col cols="12">
             <v-text-field
-              v-model="account.rmb_enc_key"
-              label="RMB Enc Key"
-              :disabled="!isEditable"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12">
-            <v-text-field
               v-model="account.public_key"
               label="Public Key"
               disabled
@@ -34,20 +27,16 @@
           </v-col>
         </v-row>
       </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn @click="toggleEdit" color="primary">
-          {{ isEditable ? 'Save' : 'Edit' }}
-        </v-btn>
-      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script setup lang="ts">
 import { useRegistrarStore } from "@/stores/registrar";
-import { ref, onMounted, watch } from "vue";
+import { ref, watch } from "vue";
 import { type Account } from "@threefold/registrar_client";
+import { toast } from "vue3-toastify";
+
 
 const registrarStore = useRegistrarStore();
 const props = defineProps({
@@ -73,26 +62,14 @@ const fetchAccount = async () => {
     const fetchedAccount = await registrarStore.client!.accounts.getAccountByTwinId(registrarStore.twinID!);
     account.value = fetchedAccount;
   } catch (e) {
-    console.error(e);
+    toast.error("Failed to fetch account");
   }
 };
 
-const toggleEdit = () => {
-  if (isEditable.value) {
-    registrarStore.client!.accounts.updateAccount(account.value.twin_id!, {
-      relays: account.value.relays,
-      rmb_enc_key: account.value.rmb_enc_key,
-    });
+watch(() => props.dialog, (newVal) => {
+  if (newVal) {
+    fetchAccount();
   }
-  isEditable.value = !isEditable.value;
-};
-
-onMounted(() => {
-  fetchAccount();
 });
-
-watch(account, () => {
-  isEditable.value = false;
-}, { deep: true });
 
 </script>

@@ -5,6 +5,7 @@ This repo contains the typescript clients and projects for Threefold gridV4.
 ## Packages
 
 - [registrar_client](./packages/registrar_client/README.md)
+- [dashboard](./packages/dashboard/README.md)
 
 ## Requirements
 

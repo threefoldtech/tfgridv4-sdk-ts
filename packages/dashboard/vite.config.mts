@@ -3,6 +3,7 @@ import Components from "unplugin-vue-components/vite";
 import Vue from "@vitejs/plugin-vue";
 import Vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 import ViteFonts from "unplugin-fonts/vite";
+import { nodePolyfills } from "vite-plugin-node-polyfills";
 
 // Utilities
 import { defineConfig } from "vite";
@@ -11,6 +12,11 @@ import { fileURLToPath, URL } from "node:url";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    nodePolyfills({
+      include: ["buffer"],
+      globals: {global: true, Buffer:true },
+    }
+    ),
     Vue({
       template: { transformAssetUrls },
     }),

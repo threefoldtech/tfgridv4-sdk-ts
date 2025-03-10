@@ -18,6 +18,7 @@
   </v-app-bar>
   <CreateFarm :dialog="showFarmCreationModel" @update:dialog="showFarmCreationModel = $event" />
   <Account :dialog="showAccountModel" @update:dialog="showAccountModel = $event" />
+  <Auth v-if="showAuthModel"/>
 </template>
 
 <script setup lang="ts">
@@ -28,9 +29,11 @@ const registrarStore = useRegistrarStore();
 const twinID = computed(() => registrarStore.twinID);
 const showFarmCreationModel = ref<boolean>(false);
 const showAccountModel = ref<boolean>(false);
+const showAuthModel = ref<boolean>(false);
 
 const logout = () => {
   registrarStore.reset();
+  showAuthModel.value = true;
 };
 </script>
 

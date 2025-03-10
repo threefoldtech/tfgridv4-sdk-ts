@@ -1,6 +1,6 @@
 <template>
   <v-col cols="6">
-    <v-card>
+    <v-card v-if="twinID">
       <v-card-title>Farm List</v-card-title>
       <v-card-text>
         <v-row class="mb-2">
@@ -44,6 +44,9 @@
         </v-data-table-server>
       </v-card-text>
     </v-card>
+    <v-alert v-else>
+      Please submit your seed to view farms
+    </v-alert>
   </v-col>
 </template>
 
@@ -51,6 +54,7 @@
 import { type FarmsFilter, type Farm } from "@threefold/registrar_client";
 import { useRegistrarStore } from "@/stores/registrar";
 import { ref, computed, watch } from "vue";
+import { toast } from "vue3-toastify";
 
 const registrarStore = useRegistrarStore();
 
@@ -62,6 +66,7 @@ const headers = [
   { title: "ID", key: "farm_id" },
   { title: "Farm Name", key: "farm_name" },
   { title: "Dedicated", key: "dedicated" },
+  { title: "Stellar Address", key: "stellar_address" },
   { title: "Created At", key: "created_at" },
   { title: "Updated At", key: "updated_at" },
 ];
@@ -78,7 +83,7 @@ const applyFilters = async () => {
   try {
     farms.value = await registrarStore.client!.farms.listFarms(filter.value);
   } catch (e) {
-    console.error(e);
+    toast.error("Failed to fetch farms");
   }
 };
 
