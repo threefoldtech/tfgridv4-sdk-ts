@@ -1,9 +1,11 @@
 import { RegistrarClient } from "../client/client";
-import { Farm, FarmCreationResponse, FarmsFilter } from "../types/farm";
+import { Farm, FarmCreationResponse, FarmsFilter, FarmUpdateRequest } from "../types/farm";
 import { createAuthHeader } from "../utils";
+import {Keypair} from "@stellar/stellar-base";
 
 const MAX_FARM_NAME_LENGTH = 40;
 const MIN_FARM_NAME_LENGTH = 1;
+
 
 export class Farms {
   private client: RegistrarClient;
@@ -13,7 +15,16 @@ export class Farms {
     this.client = client;
   }
 
-  async createFarm(farmName: string, dedicated: boolean, twinID: number): Promise<FarmCreationResponse> {
+   _isStellarAddressValid(stellarAddress: string): boolean {
+    try {
+      Keypair.fromPublicKey(stellarAddress);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  async createFarm(farmName: string, dedicated: boolean, twinID: number, stellarAddress: string): Promise<FarmCreationResponse> {
     if (twinID <= 0) {
       throw new Error("Invalid twinId");
     }
@@ -22,7 +33,12 @@ export class Farms {
         `Farm name must have minimum ${MIN_FARM_NAME_LENGTH} and maximum ${MAX_FARM_NAME_LENGTH} characters`,
       );
     }
-    const farm = { farm_name: farmName, dedicated, twin_id: twinID };
+    
+    if (!this._isStellarAddressValid(stellarAddress)) {
+      throw new Error("Invalid stellar address");
+    }
+    
+    const farm = { farm_name: farmName, dedicated, twin_id: twinID, stellar_address: stellarAddress };
     const headers = createAuthHeader(twinID, this.client.privateKey);
     try {
       const data = await this.client.post<FarmCreationResponse>(`${this.farmUri}/`, farm, { headers });
@@ -50,18 +66,25 @@ export class Farms {
     }
   }
 
-  async updateFarm(farmID: number, twinID: number, name: string): Promise<any> {
+  async updateFarm(farmID: number, twinID: number, name: string, stellarAddress?: string): Promise<any> {
     if (!name || name.length <= MIN_FARM_NAME_LENGTH || name.length >= MAX_FARM_NAME_LENGTH) {
       throw new Error(
         `Farm name must have minimum ${MIN_FARM_NAME_LENGTH} and maximum ${MAX_FARM_NAME_LENGTH} characters`,
       );
     }
+    if (stellarAddress && !this._isStellarAddressValid(stellarAddress)) {
+      throw new Error("Invalid stellar address");
+    }
+
     const headers = createAuthHeader(twinID, this.client.privateKey);
+    const farm : FarmUpdateRequest = { farm_name: name, stellar_address: stellarAddress };
     try {
-      const data = await this.client.patch<any>(`${this.farmUri}/${farmID}`, { farm_name: name }, { headers });
+      const data = await this.client.patch<any>(`${this.farmUri}/${farmID}`,farm , { headers });
       return data;
     } catch (e: any) {
       throw new Error(`Failed to update farm: ${e.response?.status} ${e.response?.statusText}`);
     }
   }
+
+ 
 }

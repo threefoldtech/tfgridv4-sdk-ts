@@ -3,6 +3,7 @@ import { NodeRegistrationRequest, UptimeReportRequest, NodesFilter } from "../..
 import { RegistrarClient } from "../../src/client/client";
 import { generateKeypair } from "../utils";
 import config from "../config.json";
+import{Keypair} from "@stellar/stellar-base";
 
 describe("test node module", () => {
   const { privateKey } = generateKeypair();
@@ -41,8 +42,8 @@ describe("test node module", () => {
     const account = await client.accounts.createAccount({});
     expect(account).not.toBeNull();
     twinID = account!.twin_id;
-
-    const farm = await client.farms.createFarm(`test-${Date.now()}`, false, twinID);
+    const stellarAddress = Keypair.random().publicKey();
+    const farm = await client.farms.createFarm(`test${Date.now()}`, false, twinID, stellarAddress);
     expect(farm).not.toBeNull();
     farmID = farm!.farm_id;
 

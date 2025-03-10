@@ -8,6 +8,7 @@ export interface Farm {
   nodes: Node[];
   twin_id: number;
   updated_at: string;
+  stellar_address: string;
 }
 export interface FarmsFilter {
   farm_name?: string;
@@ -19,4 +20,9 @@ export interface FarmsFilter {
 
 export interface FarmCreationResponse {
   farm_id: number;
+}
+
+export interface FarmUpdateRequest {
+  farm_name: string;
+  stellar_address?: string;
 }
