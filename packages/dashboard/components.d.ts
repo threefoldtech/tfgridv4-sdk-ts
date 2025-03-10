@@ -7,10 +7,13 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    Account: typeof import('./src/components/Account.vue')['default']
     Auth: typeof import('./src/components/Auth.vue')['default']
     CreateFarm: typeof import('./src/components/CreateFarm.vue')['default']
     FarmList: typeof import('./src/components/FarmList.vue')['default']
     Navbar: typeof import('./src/components/Navbar.vue')['default']
     NodeList: typeof import('./src/components/NodeList.vue')['default']
+    RouterLink: typeof import('vue-router')['RouterLink']
+    RouterView: typeof import('vue-router')['RouterView']
   }
 }
