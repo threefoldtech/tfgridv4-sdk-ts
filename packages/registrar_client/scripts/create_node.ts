@@ -11,8 +11,8 @@ async function createAccount(client: RegistrarClient): Promise<Account> {
   return account!;
 }
 
-async function createFarm(client: RegistrarClient, twinID: number): Promise<number> {
-  const res = await client.farms.createFarm(`test-${Date.now()}`, false, twinID);
+async function createFarm(client: RegistrarClient, twinID: number, stellarAddress: string): Promise<number> {
+  const res = await client.farms.createFarm(`test${Date.now()}`, false, twinID, stellarAddress);
   log("================= Creating Farm =================");
   log(res);
   log("================= Creating Farm =================");
@@ -38,7 +38,7 @@ async function main() {
   const client = new RegistrarClient({ baseURL: config.baseUrl, privateKey: config.privateKey });
   const account = await createAccount(client);
   const twinID = account.twin_id;
-  const farmID = await createFarm(client, twinID);
+  const farmID = await createFarm(client, twinID, config.stellarAddress);
   const node: NodeRegistrationRequest = {
     twin_id: twinID,
     farm_id: farmID,

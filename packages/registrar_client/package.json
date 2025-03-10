@@ -35,7 +35,7 @@
     "lint:fix": "eslint src/**/*.ts --fix",
     "node-build": "tsc --build tsconfig-node.json",
     "es-build": "tsc --build tsconfig-es.json",
-    "build": "npm-run-all node-build es-build"
+    "build": "npm run node-build && npm run es-build"
   },
   "bugs": {
     "url": "https://github.com/threefoldtech/tfgridv4-sdk-ts/issues"
