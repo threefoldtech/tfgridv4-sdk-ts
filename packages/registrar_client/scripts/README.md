@@ -23,5 +23,5 @@ yarn install
 To run any of the scripts, use the following command format:
 
 ```bash
-yarn ts-node <script_name>.ts
+yarn ts-node --project tsconfig-node.json scripts/<script_name>.ts 
 ```
