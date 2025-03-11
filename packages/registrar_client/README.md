@@ -55,6 +55,8 @@ Here is an example:
 const client = new RegistrarClient({ baseURl: "https://registrar.dev4.grid.tf/v1", privateKey: your_private_key });
 ```
 
+To be able to create a farm you need to have a Stellar wallet and provide your Stellar address. For more details on how to create a Stellar wallet and generate a Stellar address, please refer to the [Stellar Account Viewer](https://www.stellar.org/account-viewer/#!/) or the [Stellar Documentation](https://developers.stellar.org/docs/tutorials/create-account/).
+
 ## Usage
 
 Here is an example of how to use the Registrar Client:

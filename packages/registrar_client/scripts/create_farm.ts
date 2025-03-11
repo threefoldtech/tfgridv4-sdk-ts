@@ -1,12 +1,15 @@
 import { log } from "console";
 import { Account, RegistrarClient } from "../src/";
 import config from "./config.json";
+import * as tweetnacl from "tweetnacl";
+import * as base64 from "base64-js";
 
-async function createAccount(client: RegistrarClient): Promise<Account> {
-  const account = await client.accounts.createAccount({});
-  log("================= Creating Account =================");
+async function getAccount(client: RegistrarClient): Promise<Account> {
+  const publicKey = tweetnacl.sign.keyPair.fromSecretKey(base64.toByteArray(config.privateKey)).publicKey;
+  const account = await client.accounts.getAccountByPublicKey(base64.fromByteArray(publicKey));
+  log("================= Getting Account =================");
   log(account);
-  log("================= Creating Account =================");
+  log("================= Getting Account =================");
   return account!;
 }
 
@@ -27,7 +30,7 @@ async function getFarm(client: RegistrarClient, farmID: number) {
 
 async function main() {
   const client = new RegistrarClient({ baseURL: config.baseUrl, privateKey: config.privateKey });
-  const account = await createAccount(client);
+  const account = await getAccount(client);
   const twinID = account.twin_id;
   const farmID = await createFarm(client, twinID, config.stellarAddress);
   await getFarm(client, farmID);

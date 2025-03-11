@@ -3,7 +3,7 @@ import { RegistrarClient } from "../src/";
 import config from "./config.json";
 
 async function updateFarm(client: RegistrarClient, twinID: number, farmID: number, farmName: string) {
-  const farm = await client.farms.updateFarm(farmID, twinID, farmName);
+  const farm = await client.farms.updateFarm(farmID, twinID, farmName, config.stellarAddress);
   log("================= Updating Farm =================");
   log(farm);
   log("================= Updating Farm =================");
@@ -18,9 +18,9 @@ async function getFarm(client: RegistrarClient, farmID: number) {
 
 async function main() {
   const client = new RegistrarClient({ baseURL: config.baseUrl, privateKey: config.privateKey });
-  const twinID = 64;
-  const farmID = 94;
-  const farmName = "test-farm";
+  const twinID = 143;
+  const farmID = 46;
+  const farmName = "testfarm";
   await updateFarm(client, twinID, farmID, farmName);
   await getFarm(client, farmID);
 }

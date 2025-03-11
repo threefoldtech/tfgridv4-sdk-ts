@@ -22,7 +22,7 @@ async function main() {
     relays: ["relay1", "relay2"],
     rmb_enc_key: "rmb_enc_key",
   };
-  const twinID = 63;
+  const twinID = 143;
   await updateAccount(client, twinID, update);
   await getAccount(client, twinID);
 }

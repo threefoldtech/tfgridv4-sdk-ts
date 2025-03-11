@@ -19,7 +19,7 @@ async function getNode(client: RegistrarClient, nodeID: number) {
 async function main() {
   const client = new RegistrarClient({ baseURL: config.baseUrl, privateKey: config.privateKey });
   const update: UpdateNodeRequest = {
-    farm_id: 94,
+    farm_id: 46,
     interfaces: [
       {
         name: "eth1",
@@ -43,8 +43,8 @@ async function main() {
     serial_number: "SN-987654321",
     virtualized: false,
   };
-  const twinID = 64;
-  const nodeID = 47;
+  const twinID = 143;
+  const nodeID = 23;
   await updateNode(client, twinID, nodeID, update);
   await getNode(client, nodeID);
 }

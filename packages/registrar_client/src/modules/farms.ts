@@ -23,6 +23,15 @@ export class Farms {
       return false;
     }
   }
+  _isAlphanumeric(str: string): boolean {
+    const validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    for (let i = 0; i < str.length; i++) {
+      if (!validChars.includes(str[i])) {
+        return false;
+      }
+    }
+    return true;
+  }
 
   async createFarm(farmName: string, dedicated: boolean, twinID: number, stellarAddress: string): Promise<FarmCreationResponse> {
     if (twinID <= 0) {
@@ -32,6 +41,10 @@ export class Farms {
       throw new Error(
         `Farm name must have minimum ${MIN_FARM_NAME_LENGTH} and maximum ${MAX_FARM_NAME_LENGTH} characters`,
       );
+    }
+
+    if (!this._isAlphanumeric(farmName)) {
+      throw new Error("Farm name must be alphanumeric");
     }
     
     if (!this._isStellarAddressValid(stellarAddress)) {
@@ -72,6 +85,11 @@ export class Farms {
         `Farm name must have minimum ${MIN_FARM_NAME_LENGTH} and maximum ${MAX_FARM_NAME_LENGTH} characters`,
       );
     }
+
+    if (!this._isAlphanumeric(name)) {
+      throw new Error("Farm name must be alphanumeric");
+    }
+
     if (stellarAddress && !this._isStellarAddressValid(stellarAddress)) {
       throw new Error("Invalid stellar address");
     }

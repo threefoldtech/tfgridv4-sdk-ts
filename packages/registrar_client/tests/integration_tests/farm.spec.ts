@@ -90,7 +90,7 @@ describe("test farm module", () => {
   });
 
   test("update farm", async () => {
-    const farmName = `test24-${Date.now()}`;
+    const farmName = `test24${Date.now()}`;
     const farm = await client.farms.updateFarm(farmID, twinID, farmName, stellarAddress);
     expect(farm).not.toBeNull();
     const updatedFarm = await client.farms.getFarm(farmID);

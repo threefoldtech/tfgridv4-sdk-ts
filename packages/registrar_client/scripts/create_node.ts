@@ -1,22 +1,16 @@
 import { log } from "console";
 import { Account, RegistrarClient, NodeRegistrationRequest } from "../src/";
 import config from "./config.json";
+import * as tweetnacl from "tweetnacl";
+import * as base64 from "base64-js";
 
-
-async function createAccount(client: RegistrarClient): Promise<Account> {
-  const account = await client.accounts.createAccount({});
-  log("================= Creating Account =================");
+async function getAccount(client: RegistrarClient): Promise<Account> {
+  const publicKey = tweetnacl.sign.keyPair.fromSecretKey(base64.toByteArray(config.privateKey)).publicKey;
+  const account = await client.accounts.getAccountByPublicKey(base64.fromByteArray(publicKey));
+  log("================= Getting Account =================");
   log(account);
-  log("================= Creating Account =================");
+  log("================= Getting Account =================");
   return account!;
-}
-
-async function createFarm(client: RegistrarClient, twinID: number, stellarAddress: string): Promise<number> {
-  const res = await client.farms.createFarm(`test${Date.now()}`, false, twinID, stellarAddress);
-  log("================= Creating Farm =================");
-  log(res);
-  log("================= Creating Farm =================");
-  return res!.farm_id;
 }
 
 async function createNode(client: RegistrarClient, node: NodeRegistrationRequest): Promise<number> {
@@ -36,12 +30,11 @@ async function getNode(client: RegistrarClient, nodeID: number) {
 
 async function main() {
   const client = new RegistrarClient({ baseURL: config.baseUrl, privateKey: config.privateKey });
-  const account = await createAccount(client);
+  const account = await getAccount(client);
   const twinID = account.twin_id;
-  const farmID = await createFarm(client, twinID, config.stellarAddress);
   const node: NodeRegistrationRequest = {
     twin_id: twinID,
-    farm_id: farmID,
+    farm_id: 46,
     interfaces: [
       {
         name: "eth0",
