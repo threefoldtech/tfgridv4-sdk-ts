@@ -19,8 +19,8 @@ describe("Util Functions", () => {
   });
 
   test("createSignatureWithPublicKey generates a valid signature", () => {
-    const timestamp = 1700000000;
-    const signature = createSignatureWithPublicKey(timestamp, publicKey, privateKey);
+    const { signature, timestamp } = createSignatureWithPublicKey(publicKey,
+      privateKey);
 
     expect(tweetnacl.sign.detached).toHaveBeenCalledWith(
       Buffer.from(`${timestamp}:${publicKey}`, "utf-8"),
@@ -45,12 +45,12 @@ describe("Util Functions", () => {
 
   test("createSignatureWithPublicKey handles invalid base64 privateKey", () => {
     const invalidPrivateKey = "invalid_base64_string";
-    expect(() => createSignatureWithPublicKey(1700000000, publicKey, invalidPrivateKey)).toThrow();
+    expect(() => createSignatureWithPublicKey(publicKey, invalidPrivateKey)).toThrow();
   });
 
   test("createSignatureWithPublicKey handles empty publicKey", () => {
     const emptyPublicKey = "";
-    expect(() => createSignatureWithPublicKey(1700000000, emptyPublicKey, privateKey)).toThrow();
+    expect(() => createSignatureWithPublicKey(emptyPublicKey, privateKey)).toThrow();
   });
 
   test("createAuthHeader handles invalid base64 privateKey", () => {

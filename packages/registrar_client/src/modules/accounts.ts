@@ -14,13 +14,11 @@ export class Accounts {
   }
 
   async createAccount(request: Partial<CreateAccountRequest>): Promise<Account | null> {
-    const timestamp = Math.floor(Date.now() / 1000);
-
     const privateKey = this.client.privateKey;
     const keyPair = tweetnacl.sign.keyPair.fromSecretKey(base64.toByteArray(privateKey));
 
     const publicKey = base64.fromByteArray(keyPair.publicKey);
-    const signature = createSignatureWithPublicKey(timestamp, publicKey, privateKey);
+    const { signature, timestamp } = createSignatureWithPublicKey(publicKey, privateKey);
 
     request.public_key = publicKey;
     request.signature = signature;

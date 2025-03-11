@@ -8,12 +8,14 @@ function createSignatureForChallenge(challenge: string, privateKey: string): str
   return base64.fromByteArray(signature);
 }
 
-export function createSignatureWithPublicKey(timestamp: number, publicKey: string, privateKey: string): string {
+export function createSignatureWithPublicKey(publicKey: string, privateKey: string): { signature: string; timestamp: number } {
   if (publicKey === "") {
     throw new Error("Public key is required");
   }
+  const timestamp = Math.floor(Date.now() / 1000);
   const challenge = `${timestamp}:${publicKey}`;
-  return createSignatureForChallenge(challenge, privateKey);
+  const signature = createSignatureForChallenge(challenge, privateKey);
+  return { signature, timestamp };
 }
 
 export function createAuthHeader(twinID: number, privateKey: string): AxiosRequestConfig["headers"] {
