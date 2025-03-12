@@ -21,6 +21,7 @@
     "@mdi/font": "7.4.47",
     "@threefold/registrar_client": "0.1.0",
     "buffer": "^6.0.3",
+    "filesize": "^10.1.6",
     "pinia": "^3.0.1",
     "roboto-fontface": "*",
     "tweetnacl": "^1.0.3",

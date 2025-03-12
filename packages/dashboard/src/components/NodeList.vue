@@ -44,12 +44,12 @@
               </v-card-title>
               <v-card-text>
                 <v-row>
-                  <v-col cols="6">CPU: {{ convertToGB(item.resources.cru) }}GB</v-col>
-                  <v-col cols="6">Memory: {{ convertToGB(item.resources.mru) }}GB</v-col>
+                  <v-col cols="6">CPU: {{item.resources.cru }}</v-col>
+                  <v-col cols="6">Memory: {{ formatFileSize(item.resources.mru) }}</v-col>
                 </v-row>
                 <v-row>
-                  <v-col cols="6">SSD Disk: {{ convertToGB(item.resources.sru)}}GB</v-col>
-                  <v-col cols="6">HDD Disk: {{ convertToGB(item.resources.hru) }}GB</v-col>
+                  <v-col cols="6">SSD Disk: {{ formatFileSize(item.resources.sru) }}</v-col>
+                  <v-col cols="6">HDD Disk: {{ formatFileSize(item.resources.hru) }}</v-col>
                 </v-row>
               </v-card-text>
             </v-card>
@@ -68,6 +68,7 @@ import { type NodesFilter, type Node } from "@threefold/registrar_client";
 import { useRegistrarStore } from "@/stores/registrar";
 import { ref, computed, watch } from "vue";
 import { toast } from "vue3-toastify";
+import {filesize} from "filesize";
 
 const registrarStore = useRegistrarStore();
 
@@ -115,8 +116,8 @@ const updateOptions = async (options: any) => {
   await applyFilters();
 };
 
-const convertToGB = (sizeInBytes: number): number => {
-  return parseFloat((sizeInBytes / (1024 ** 3)).toFixed(2));
+const formatFileSize = (size: number): string => {
+  return filesize(size, { standard: "jedec", base: 10, round: 3 });
 };
 
 </script>

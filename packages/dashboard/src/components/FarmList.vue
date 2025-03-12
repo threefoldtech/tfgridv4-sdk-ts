@@ -33,14 +33,32 @@
         </v-row>
 
         <v-data-table-server
-          :headers="headers"
           v-model:items-per-page="filter.size"
           :items-length="100"
           :items="farms"
           @update:options="updateOptions"
           class="border-thin"
           height="500"
+          hide-default-header
         >
+         <template v-slot:item="{ item }">
+          <v-card class="mb-2" color="grey-darken-3">
+            <v-card-title class="text-subtitle-1">
+            {{ item.farm_name }}
+              <v-chip color="primary" variant="tonal">{{ item.dedicated ? "Dedicated" : "Non-Dedicated" }}</v-chip>
+            </v-card-title>
+            <v-card-text>
+              <v-row>
+                <v-col cols="6">Farm ID: {{ item.farm_id }}</v-col>
+                <v-col cols="6">Stellar Address: {{ item.stellar_address }}</v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="6">Created At: {{ formatTimestamp(item.created_at) }}</v-col>
+                <v-col cols="6">Updated At: {{ formatTimestamp(item.updated_at) }}</v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
+         </template>
         </v-data-table-server>
       </v-card-text>
     </v-card>
@@ -62,14 +80,7 @@ const twinID = computed(() => registrarStore.twinID);
 
 const filter = ref<FarmsFilter>({ page: 1, size: 10 });
 const farms = ref<Farm[]>([]);
-const headers = [
-  { title: "ID", key: "farm_id" },
-  { title: "Farm Name", key: "farm_name" },
-  { title: "Dedicated", key: "dedicated" },
-  { title: "Stellar Address", key: "stellar_address" },
-  { title: "Created At", key: "created_at" },
-  { title: "Updated At", key: "updated_at" },
-];
+
 
 const clearFilters = async () => {
   filter.value = {
@@ -101,4 +112,10 @@ const updateOptions = async (options: any) => {
   };
   await applyFilters();
 };
+
+const formatTimestamp = (timestamp: string): string => {
+  const date = new Date(timestamp);
+  return date.toString().split("(")[0]
+};
 </script>
+
