@@ -3,7 +3,7 @@ import { Accounts } from "../modules/accounts";
 import { Farms } from "../modules/farms";
 import { Nodes } from "../modules/nodes";
 import { Zos } from "../modules/zos";
-
+import {validateMnemonic} from "bip39";
 export abstract class BaseClient {
   private client: AxiosInstance;
 
@@ -35,25 +35,40 @@ export abstract class BaseClient {
 }
 interface Config {
   baseURL: string;
-  privateKey: string;
+  mnemonicOrSeed: string;
 }
 
 export class RegistrarClient extends BaseClient {
-  public readonly privateKey: string;
+  public readonly mnemonicOrSeed: string;
   accounts: Accounts;
   farms: Farms;
   nodes: Nodes;
   zos: Zos;
 
-  constructor({ baseURL, privateKey }: Config) {
+  _validateSeed(seed: string): string {
+    if (!seed.startsWith("0x")) {
+      seed = `0x${seed}`;
+    }
+    if (!seed.match(/^0x[a-fA-F0-9]{64}$/)) {
+      return "";
+    }
+    return seed;
+  }
+  
+  constructor({ baseURL, mnemonicOrSeed }: Config) {
     if (!baseURL) {
       throw new Error("Base URL is required");
     }
-    if (!privateKey) {
-      throw new Error("Private key is required");
-    }
     super(baseURL);
-    this.privateKey = privateKey;
+    
+    if (!validateMnemonic(mnemonicOrSeed)) {
+      mnemonicOrSeed = this._validateSeed(mnemonicOrSeed);
+    }
+    if (!mnemonicOrSeed) {
+      throw new Error("Invalid mnemonic or seed");
+    }
+
+    this.mnemonicOrSeed = mnemonicOrSeed;
     this.accounts = new Accounts(this);
     this.farms = new Farms(this);
     this.nodes = new Nodes(this);

@@ -1,15 +1,17 @@
 import { describe, test, expect } from "@jest/globals";
 import { RegistrarClient } from "../../src/client/client";
 import { UpdateAccountRequest } from "../../src/types/account";
-import { generateKeypair } from "../utils";
-import config from "../config.json";
-describe("test account module", () => {
-  const { publicKey, privateKey } = generateKeypair();
+import {generateMnemonic} from "bip39";
 
-  const client = new RegistrarClient({ baseURL: config.baseUrl, privateKey: privateKey });
+import config from "../config.json";
+import { derivePublicKey, generateRandomSeed } from "../utils";
+describe("test account module", () => {
+  const mnemonic = generateMnemonic();
+
+  const client = new RegistrarClient({ baseURL: config.baseUrl, mnemonicOrSeed: mnemonic });
 
   let twinID = 1;
-  test("create account", async () => {
+  test("create account with mnemonic", async () => {
     const account = await client.accounts.createAccount({});
     expect(account).not.toBeNull();
     if (account) {
@@ -17,11 +19,20 @@ describe("test account module", () => {
     }
   });
 
+  test("create account with seed", async () => {
+    const seed = generateRandomSeed();
+    const client = new RegistrarClient({ baseURL: config.baseUrl, mnemonicOrSeed: seed });
+    const account = await client.accounts.createAccount({});
+    expect(account).not.toBeNull();
+  });
+
+
   test.skip("create account with same private key", async () => {
     await expect(client.accounts.createAccount({})).rejects.toThrowError("Failed to create account: 409 Conflict");
   });
 
   test("get account by public key", async () => {
+    const publicKey = await derivePublicKey(mnemonic);
     const account = await client.accounts.getAccountByPublicKey(publicKey);
     expect(account).not.toBeNull();
   });

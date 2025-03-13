@@ -17,7 +17,7 @@ async function getAccount(client: RegistrarClient, twinID: number) {
 }
 
 async function main() {
-  const client = new RegistrarClient({ baseURL: config.baseUrl, privateKey: config.privateKey });
+  const client = new RegistrarClient({ baseURL: config.baseUrl, mnemonicOrSeed: config.mnemonicOrSeed });
   const update: UpdateAccountRequest = {
     relays: ["relay1", "relay2"],
     rmb_enc_key: "rmb_enc_key",

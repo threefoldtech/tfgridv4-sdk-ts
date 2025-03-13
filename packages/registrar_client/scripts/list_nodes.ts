@@ -9,7 +9,7 @@ async function listNodes(client: RegistrarClient, filter: NodesFilter) {
 }
 
 async function main() {
-  const client = new RegistrarClient({ baseURL: config.baseUrl, privateKey: config.privateKey });
+  const client = new RegistrarClient({ baseURL: config.baseUrl, mnemonicOrSeed: config.mnemonicOrSeed });
   const filter: NodesFilter = {
     farm_id: 70,
   };

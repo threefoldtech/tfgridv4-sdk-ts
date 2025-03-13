@@ -1,11 +1,11 @@
 import { log } from "console";
 import { Account, RegistrarClient } from "../src/";
 import config from "./config.json";
-import * as tweetnacl from "tweetnacl";
 import * as base64 from "base64-js";
+import { derivePublicKey } from "./utils";
 
 async function getAccount(client: RegistrarClient): Promise<Account> {
-  const publicKey = tweetnacl.sign.keyPair.fromSecretKey(base64.toByteArray(config.privateKey)).publicKey;
+  const publicKey = await derivePublicKey(config.mnemonicOrSeed);
   const account = await client.accounts.getAccountByPublicKey(base64.fromByteArray(publicKey));
   log("================= Getting Account =================");
   log(account);
@@ -29,7 +29,7 @@ async function getFarm(client: RegistrarClient, farmID: number) {
 }
 
 async function main() {
-  const client = new RegistrarClient({ baseURL: config.baseUrl, privateKey: config.privateKey });
+  const client = new RegistrarClient({ baseURL: config.baseUrl, mnemonicOrSeed: config.mnemonicOrSeed });
   const account = await getAccount(client);
   const twinID = account.twin_id;
   const farmID = await createFarm(client, twinID, config.stellarAddress);
