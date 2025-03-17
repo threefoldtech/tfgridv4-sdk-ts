@@ -17,7 +17,7 @@ async function getFarm(client: RegistrarClient, farmID: number) {
 }
 
 async function main() {
-  const client = new RegistrarClient({ baseURL: config.baseUrl, privateKey: config.privateKey });
+  const client = new RegistrarClient({ baseURL: config.baseUrl, mnemonicOrSeed: config.mnemonicOrSeed });
   const twinID = 143;
   const farmID = 46;
   const farmName = "testfarm";

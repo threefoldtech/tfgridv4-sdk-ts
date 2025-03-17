@@ -19,7 +19,7 @@ export class Nodes {
 
   async registerNode(node: NodeRegistrationRequest): Promise<NodeRegistrationResponse> {
     this._validateNodeData(node);
-    const headers = createAuthHeader(node.twin_id, this.client.privateKey);
+    const headers = await createAuthHeader(node.twin_id, this.client.mnemonicOrSeed);
     try {
       const data = await this.client.post<NodeRegistrationResponse>(`${this.nodeUri}/`, node, { headers });
       return data;
@@ -50,7 +50,7 @@ export class Nodes {
 
   async updateNode(nodeID: number, twinID: number, node: UpdateNodeRequest): Promise<any> {
     this._validateNodeData(node);
-    const headers = createAuthHeader(twinID, this.client.privateKey);
+    const headers = await createAuthHeader(twinID, this.client.mnemonicOrSeed);
     try {
       const data = await this.client.patch<Node>(`${this.nodeUri}/${nodeID}`, node, { headers });
       return data;
@@ -60,7 +60,7 @@ export class Nodes {
   }
 
   async reportNodeUptime(nodeID: number, twinID: number, uptime: UptimeReportRequest): Promise<any> {
-    const headers = createAuthHeader(twinID, this.client.privateKey);
+    const headers = await createAuthHeader(twinID, this.client.mnemonicOrSeed);
     try {
       const data = await this.client.post<any>(`${this.nodeUri}/${nodeID}/uptime`, uptime, { headers });
       return data;

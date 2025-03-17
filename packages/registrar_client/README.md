@@ -35,18 +35,12 @@ This package provides a client for interacting with the TFGrid v4 Node Registrar
 
 ## Getting Started
 
-To initialize the Registrar Client, you need to provide the base url of registrar and Base64-encoded, 64-byte raw Ed25519 private key (nacl format).
+To initialize the Registrar Client, you need to provide the base url of registrar and your mnemonics or 64 character hex seed
 
-To generate a 64-byte ed25519 private key, you can use tweetnacl library to generate key:
+To generate 64 character hex seed:
 
-```typescript
-import nacl from "tweetnacl";
-import base64 from "base64-js";
-
-const keyPair = nacl.sign.keyPair();
-const privateKey = base64.fromByteArray(keyPair.secretKey);
-
-console.log("Your 64-byte ed25519 private key:", privateKey);
+```bash
+openssl rand -hex 32
 ```
 
 Here is an example:

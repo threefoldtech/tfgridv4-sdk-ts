@@ -1,0 +1,51 @@
+{
+  "name": "@threefold/dashboard",
+  "type": "module",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/threefoldtech/tfgridv4-sdk-ts.git"
+  },
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "run-p type-check \"build-only {@}\" --",
+    "preview": "vite preview",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --build --force",
+    "format": "prettier --write .",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix"
+  },
+  "dependencies": {
+    "@mdi/font": "7.4.47",
+    "@threefold/registrar_client": "0.1.0",
+    "bip39": "^3.1.0",
+    "buffer": "^6.0.3",
+    "filesize": "^10.1.6",
+    "pinia": "^3.0.1",
+    "roboto-fontface": "*",
+    "tweetnacl": "^1.0.3",
+    "vue": "^3.4.31",
+    "vue-router": "^4.5.0",
+    "vue3-toastify": "^0.2.8",
+    "vuetify": "^3.6.14"
+  },
+  "devDependencies": {
+    "@tsconfig/node22": "^22.0.0",
+    "@types/node": "^22.9.0",
+    "@vitejs/plugin-vue": "^5.1.4",
+    "@vue/eslint-config-typescript": "^14.1.3",
+    "@vue/tsconfig": "^0.5.1",
+    "npm-run-all2": "^7.0.1",
+    "sass": "1.77.8",
+    "sass-embedded": "^1.77.8",
+    "typescript": "~5.6.3",
+    "unplugin-fonts": "^1.1.1",
+    "unplugin-vue-components": "^0.27.2",
+    "vite": "^5.4.10",
+    "vite-plugin-node-polyfills": "^0.23.0",
+    "vite-plugin-vuetify": "^2.0.3",
+    "vue-tsc": "^2.1.10"
+  }
+}

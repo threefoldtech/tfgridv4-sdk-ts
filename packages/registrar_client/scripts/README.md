@@ -16,7 +16,7 @@ yarn install
 
 ## Getting Started
 
-- Set base URL, your private key, and Stellar address (if needed) in `scripts/config.json`.
+- Set base URL, your mnemonic or seed, and Stellar address (if needed) in `scripts/config.json`.
 
 ## Usage
 

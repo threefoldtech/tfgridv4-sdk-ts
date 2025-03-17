@@ -10,7 +10,7 @@ async function createAccount(client: RegistrarClient) {
 }
 
 async function main() {
-  const client = new RegistrarClient({ baseURL: config.baseUrl, privateKey: config.privateKey });
+  const client = new RegistrarClient({ baseURL: config.baseUrl, mnemonicOrSeed: config.mnemonicOrSeed });
   await createAccount(client);
 }
 
