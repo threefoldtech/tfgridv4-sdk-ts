@@ -8,7 +8,6 @@
           <NodeList />
         </v-row>
       </v-container>
-      <Auth />
     </v-main>
   </v-app>
 </template>

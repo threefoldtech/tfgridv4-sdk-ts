@@ -18,18 +18,24 @@
   </v-app-bar>
   <CreateFarm :dialog="showFarmCreationModel" @update:dialog="showFarmCreationModel = $event" />
   <Account :dialog="showAccountModel" @update:dialog="showAccountModel = $event" />
-  <Auth v-if="showAuthModel"/>
+  <Auth :dialog="showAuthModel" @update:dialog="showAuthModel = $event"/>
 </template>
 
 <script setup lang="ts">
 import { useRegistrarStore } from "@/stores/registrar";
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 const registrarStore = useRegistrarStore();
 const twinID = computed(() => registrarStore.twinID);
 const showFarmCreationModel = ref<boolean>(false);
 const showAccountModel = ref<boolean>(false);
 const showAuthModel = ref<boolean>(false);
+
+onMounted(() => {
+  if (!registrarStore.twinID) {
+    showAuthModel.value = true;
+  }
+});
 
 const logout = () => {
   registrarStore.reset();
