@@ -1,47 +1,56 @@
 import * as base64 from "base64-js";
-import * as tweetnacl from "tweetnacl";
 import { AxiosRequestConfig } from "axios";
 import { Buffer } from "buffer";
-import { mnemonicToSeed, validateMnemonic} from "bip39";
+import { Keyring } from "@polkadot/keyring";
+import { KeypairType } from "@polkadot/util-crypto/types";
+import { KeyringPair } from "@polkadot/keyring/types";
+import { validateMnemonic } from "bip39";
+import { cryptoWaitReady } from "@polkadot/util-crypto";
 
-function createSignatureForChallenge(challenge: string, privateKey: string): string {
-  const signature = tweetnacl.sign.detached(Buffer.from(challenge, "utf-8"), base64.toByteArray(privateKey));
+const SUPPORTED_KEYPAIR_TYPES: KeypairType[] = ["sr25519", "ed25519"];
+
+
+
+function createSignatureForChallenge(challenge: string, keypair: KeyringPair): string {
+  const signature = keypair.sign(Buffer.from(challenge));
   return base64.fromByteArray(signature);
 }
 
-async function deriveKeyPair(mnemonicOrSeed: string): Promise<{ publicKey: string; privateKey: string; }> {
-  let seed : Buffer;
-  if (validateMnemonic(mnemonicOrSeed)) {
-    seed = (await mnemonicToSeed(mnemonicOrSeed)).subarray(0, 32);
+export async function deriveKeyPair(
+  mnemonicOrSeed: string,
+  keypairType: KeypairType = SUPPORTED_KEYPAIR_TYPES[0],
+): Promise<KeyringPair> {
+  if (!SUPPORTED_KEYPAIR_TYPES.includes(keypairType)) {
+    throw new Error(`Unsupported keypair type: ${keypairType}`);
+  }
 
-  } else if(mnemonicOrSeed.startsWith("0x")) {
-    seed = Buffer.from(mnemonicOrSeed.slice(2), "hex"); 
-  } else {
+  if (!validateMnemonic(mnemonicOrSeed) && !mnemonicOrSeed.startsWith("0x")) {
     throw new Error("Invalid seed or mnemonic");
   }
-  const keyPair = tweetnacl.sign.keyPair.fromSeed(seed);
-  return {
-    publicKey: base64.fromByteArray(keyPair.publicKey),
-    privateKey: base64.fromByteArray(keyPair.secretKey),
-  };
+  await cryptoWaitReady();
+  const keyring = new Keyring({ type: keypairType });
+  const keypair = keyring.addFromUri(mnemonicOrSeed);
+  return keypair;
 }
 
-export async function createSignatureWithPublicKey(mnemonicOrSeed: string): Promise<{ signature: string; publicKey: string; timestamp: number; }> {
-  const { publicKey, privateKey } = await deriveKeyPair(mnemonicOrSeed);
+export async function createSignatureWithPublicKey(
+  mnemonicOrSeed: string,
+): Promise<{ signature: string; publicKey: string; timestamp: number }> {
+  const keypair = await deriveKeyPair(mnemonicOrSeed);
+  const publicKey = base64.fromByteArray(keypair.publicKey);
   const timestamp = Math.floor(Date.now() / 1000);
   const challenge = `${timestamp}:${publicKey}`;
-  const signature = createSignatureForChallenge(challenge, privateKey);
+  const signature = createSignatureForChallenge(challenge, keypair);
   return { signature, publicKey, timestamp };
 }
 
 export async function createAuthHeader(twinID: number, mnemonicOrSeed: string): Promise<AxiosRequestConfig["headers"]> {
-  const { privateKey } = await deriveKeyPair(mnemonicOrSeed);
+  const keypair = await deriveKeyPair(mnemonicOrSeed);
   const timestamp = Math.floor(Date.now() / 1000);
   const challenge = `${timestamp}:${twinID}`;
-  const signature = createSignatureForChallenge(challenge, privateKey);
+  const signature = createSignatureForChallenge(challenge, keypair);
   const header = {
     "X-Auth": `${Buffer.from(challenge).toString("base64")}:${signature}`,
   };
   return header;
 }
-

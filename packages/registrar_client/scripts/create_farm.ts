@@ -2,11 +2,11 @@ import { log } from "console";
 import { Account, RegistrarClient } from "../src/";
 import config from "./config.json";
 import * as base64 from "base64-js";
-import { derivePublicKey } from "./utils";
+import { deriveKeyPair } from "../src/utils";
 
 async function getAccount(client: RegistrarClient): Promise<Account> {
-  const publicKey = await derivePublicKey(config.mnemonicOrSeed);
-  const account = await client.accounts.getAccountByPublicKey(base64.fromByteArray(publicKey));
+  const keyPair = await deriveKeyPair(config.mnemonicOrSeed);
+  const account = await client.accounts.getAccountByPublicKey(base64.fromByteArray(keyPair.publicKey));
   log("================= Getting Account =================");
   log(account);
   log("================= Getting Account =================");

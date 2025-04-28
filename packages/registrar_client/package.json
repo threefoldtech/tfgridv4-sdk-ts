@@ -54,6 +54,7 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
+    "@polkadot/keyring": "^13.4.4",
     "@stellar/stellar-base": "^12.1.1",
     "@types/jest": "^29.5.14",
     "bip39": "^3.1.0",
