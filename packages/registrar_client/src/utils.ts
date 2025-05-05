@@ -7,7 +7,7 @@ import { KeyringPair } from "@polkadot/keyring/types";
 import { validateMnemonic } from "bip39";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
 
-const SUPPORTED_KEYPAIR_TYPES: KeypairType[] = ["sr25519", "ed25519"];
+export const SUPPORTED_KEYPAIR_TYPES: KeypairType[] = ["sr25519", "ed25519"];
 
 
 
@@ -18,7 +18,7 @@ function createSignatureForChallenge(challenge: string, keypair: KeyringPair): s
 
 export async function deriveKeyPair(
   mnemonicOrSeed: string,
-  keypairType: KeypairType = SUPPORTED_KEYPAIR_TYPES[0],
+  keypairType: KeypairType
 ): Promise<KeyringPair> {
   if (!SUPPORTED_KEYPAIR_TYPES.includes(keypairType)) {
     throw new Error(`Unsupported keypair type: ${keypairType}`);
@@ -35,8 +35,9 @@ export async function deriveKeyPair(
 
 export async function createSignatureWithPublicKey(
   mnemonicOrSeed: string,
+  keypairType: KeypairType ,
 ): Promise<{ signature: string; publicKey: string; timestamp: number }> {
-  const keypair = await deriveKeyPair(mnemonicOrSeed);
+  const keypair = await deriveKeyPair(mnemonicOrSeed, keypairType);
   const publicKey = base64.fromByteArray(keypair.publicKey);
   const timestamp = Math.floor(Date.now() / 1000);
   const challenge = `${timestamp}:${publicKey}`;
@@ -44,8 +45,8 @@ export async function createSignatureWithPublicKey(
   return { signature, publicKey, timestamp };
 }
 
-export async function createAuthHeader(twinID: number, mnemonicOrSeed: string): Promise<AxiosRequestConfig["headers"]> {
-  const keypair = await deriveKeyPair(mnemonicOrSeed);
+export async function createAuthHeader(twinID: number, mnemonicOrSeed: string, keypairType: KeypairType): Promise<AxiosRequestConfig["headers"]> {
+  const keypair = await deriveKeyPair(mnemonicOrSeed, keypairType);
   const timestamp = Math.floor(Date.now() / 1000);
   const challenge = `${timestamp}:${twinID}`;
   const signature = createSignatureForChallenge(challenge, keypair);

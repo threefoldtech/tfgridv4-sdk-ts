@@ -12,7 +12,7 @@ export class Accounts {
   }
 
   async createAccount(request: Partial<CreateAccountRequest>): Promise<Account | null> {
-    const { signature, publicKey, timestamp } = await createSignatureWithPublicKey(this.client.mnemonicOrSeed);
+    const { signature, publicKey, timestamp } = await createSignatureWithPublicKey(this.client.mnemonicOrSeed, this.client.keypairType);
 
     request.public_key = publicKey;
     request.signature = signature;
@@ -53,7 +53,7 @@ export class Accounts {
 
   async updateAccount(twinID: number, body: UpdateAccountRequest): Promise<any> {
     try {
-      const headers = await createAuthHeader(twinID, this.client.mnemonicOrSeed);
+      const headers = await createAuthHeader(twinID, this.client.mnemonicOrSeed, this.client.keypairType);
 
       const data = await this.client.patch<any>(`${this.accountUri}/${twinID}`, body, { headers });
       return data;

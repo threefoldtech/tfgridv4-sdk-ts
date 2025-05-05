@@ -3,7 +3,9 @@ import { Accounts } from "../modules/accounts";
 import { Farms } from "../modules/farms";
 import { Nodes } from "../modules/nodes";
 import { Zos } from "../modules/zos";
-import {validateMnemonic} from "bip39";
+import { validateMnemonic } from "bip39";
+import { KeypairType } from "@polkadot/util-crypto/types";
+import { SUPPORTED_KEYPAIR_TYPES } from "../utils";
 export abstract class BaseClient {
   private client: AxiosInstance;
 
@@ -36,10 +38,12 @@ export abstract class BaseClient {
 interface Config {
   baseURL: string;
   mnemonicOrSeed: string;
+  keypairType?: KeypairType;
 }
 
 export class RegistrarClient extends BaseClient {
   public readonly mnemonicOrSeed: string;
+  public readonly keypairType: KeypairType;
   accounts: Accounts;
   farms: Farms;
   nodes: Nodes;
@@ -55,7 +59,10 @@ export class RegistrarClient extends BaseClient {
     return seed;
   }
   
-  constructor({ baseURL, mnemonicOrSeed }: Config) {
+  constructor({ baseURL, mnemonicOrSeed, keypairType = "sr25519" }: Config) {
+    if (!SUPPORTED_KEYPAIR_TYPES.includes(keypairType)) {
+      throw new Error(`Unsupported keypair type: ${keypairType}`);
+    }
     if (!baseURL) {
       throw new Error("Base URL is required");
     }
@@ -69,6 +76,7 @@ export class RegistrarClient extends BaseClient {
     }
 
     this.mnemonicOrSeed = mnemonicOrSeed;
+    this.keypairType = keypairType;
     this.accounts = new Accounts(this);
     this.farms = new Farms(this);
     this.nodes = new Nodes(this);

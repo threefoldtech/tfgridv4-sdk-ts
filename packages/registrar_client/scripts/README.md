@@ -16,12 +16,12 @@ yarn install
 
 ## Getting Started
 
-- Set base URL, your mnemonic or seed, and Stellar address (if needed) in `scripts/config.json`.
+- Set base URL, your mnemonic or seed, keypair type and Stellar address (if needed) in `scripts/config.json`.
 
 ## Usage
 
 To run any of the scripts, use the following command format:
 
 ```bash
-yarn ts-node --project tsconfig-node.json scripts/<script_name>.ts 
+yarn ts-node --project tsconfig-node.json scripts/<script_name>.ts
 ```

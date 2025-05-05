@@ -1,6 +1,7 @@
 import { log } from "console";
 import { UpdateNodeRequest, RegistrarClient } from "../src/";
 import config from "./config.json";
+import { KeypairType } from "@polkadot/util-crypto/types";
 
 async function updateNode(client: RegistrarClient, twinID: number, nodeID: number, update: UpdateNodeRequest) {
   const account = await client.nodes.updateNode(nodeID, twinID, update);
@@ -17,7 +18,7 @@ async function getNode(client: RegistrarClient, nodeID: number) {
 }
 
 async function main() {
-  const client = new RegistrarClient({ baseURL: config.baseUrl, mnemonicOrSeed: config.mnemonicOrSeed });
+  const client = new RegistrarClient({ baseURL: config.baseUrl, mnemonicOrSeed: config.mnemonicOrSeed, keypairType: config.keypairType as KeypairType });
   const update: UpdateNodeRequest = {
     farm_id: 46,
     interfaces: [

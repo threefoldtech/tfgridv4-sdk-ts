@@ -1,1 +1,1 @@
-{"baseUrl": "https://registrar.dev4.grid.tf/v1", "mnemonicOrSeed": "", "stellarAddress": ""}
+{"baseUrl": "https://registrar.dev4.grid.tf/v1", "mnemonicOrSeed": "", "stellarAddress": "", "keypairType": "ed25519"}

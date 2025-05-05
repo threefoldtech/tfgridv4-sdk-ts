@@ -3,9 +3,10 @@ import { Account, RegistrarClient } from "../src/";
 import config from "./config.json";
 import * as base64 from "base64-js";
 import { deriveKeyPair } from "../src/utils";
+import { KeypairType } from "@polkadot/util-crypto/types";
 
 async function getAccount(client: RegistrarClient): Promise<Account> {
-  const keyPair = await deriveKeyPair(config.mnemonicOrSeed);
+  const keyPair = await deriveKeyPair(config.mnemonicOrSeed, config.keypairType as KeypairType);
   const account = await client.accounts.getAccountByPublicKey(base64.fromByteArray(keyPair.publicKey));
   log("================= Getting Account =================");
   log(account);
