@@ -2,9 +2,10 @@ import { describe, test, expect } from "@jest/globals";
 import { RegistrarClient } from "../../src/client/client";
 import { UpdateAccountRequest } from "../../src/types/account";
 import {generateMnemonic} from "bip39";
+import { deriveKeyPair } from "../../src/utils";
 
 import config from "../config.json";
-import { derivePublicKey, generateRandomSeed } from "../utils";
+import { generateRandomSeed } from "../utils";
 describe("test account module", () => {
   const mnemonic = generateMnemonic();
 
@@ -32,7 +33,8 @@ describe("test account module", () => {
   });
 
   test("get account by public key", async () => {
-    const publicKey = await derivePublicKey(mnemonic);
+    const keyPair = await deriveKeyPair(mnemonic, "sr25519");
+    const publicKey = Buffer.from(keyPair.publicKey).toString("base64");
     const account = await client.accounts.getAccountByPublicKey(publicKey);
     expect(account).not.toBeNull();
   });

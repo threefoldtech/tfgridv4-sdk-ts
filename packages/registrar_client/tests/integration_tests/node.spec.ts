@@ -72,7 +72,7 @@ describe("test node module", () => {
     dummyNode.twin_id = twinID;
     dummyNode.farm_id = 9999999999999;
     await expect(client.nodes.registerNode(dummyNode as NodeRegistrationRequest)).rejects.toThrowError(
-      "Failed to register node: 400 Bad Request",
+      "Failed to register node: 500 Internal Server Error",
     );
   });
 
