@@ -1,7 +1,5 @@
 import { RegistrarClient } from "../client/client";
 import { Account, CreateAccountRequest, UpdateAccountRequest } from "../types/account";
-import * as tweetnacl from "tweetnacl";
-import * as base64 from "base64-js";
 import { createSignatureWithPublicKey, createAuthHeader } from "../utils";
 
 export class Accounts {
@@ -14,11 +12,7 @@ export class Accounts {
   }
 
   async createAccount(request: Partial<CreateAccountRequest>): Promise<Account | null> {
-    const privateKey = this.client.privateKey;
-    const keyPair = tweetnacl.sign.keyPair.fromSecretKey(base64.toByteArray(privateKey));
-
-    const publicKey = base64.fromByteArray(keyPair.publicKey);
-    const { signature, timestamp } = createSignatureWithPublicKey(publicKey, privateKey);
+    const { signature, publicKey, timestamp } = await createSignatureWithPublicKey(this.client.mnemonicOrSeed, this.client.keypairType);
 
     request.public_key = publicKey;
     request.signature = signature;
@@ -59,7 +53,7 @@ export class Accounts {
 
   async updateAccount(twinID: number, body: UpdateAccountRequest): Promise<any> {
     try {
-      const headers = createAuthHeader(twinID, this.client.privateKey);
+      const headers = await createAuthHeader(twinID, this.client.mnemonicOrSeed, this.client.keypairType);
 
       const data = await this.client.patch<any>(`${this.accountUri}/${twinID}`, body, { headers });
       return data;

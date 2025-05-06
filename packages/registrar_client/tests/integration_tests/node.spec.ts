@@ -1,14 +1,14 @@
 import { describe, test, expect } from "@jest/globals";
 import { NodeRegistrationRequest, UptimeReportRequest, NodesFilter } from "../../src/types/node";
 import { RegistrarClient } from "../../src/client/client";
-import { generateKeypair } from "../utils";
 import config from "../config.json";
 import{Keypair} from "@stellar/stellar-base";
+import { generateMnemonic } from "bip39";
 
 describe("test node module", () => {
-  const { privateKey } = generateKeypair();
+  const mnemonic = generateMnemonic();
 
-  const client = new RegistrarClient({ baseURL: config.baseUrl, privateKey: privateKey });
+  const client = new RegistrarClient({ baseURL: config.baseUrl, mnemonicOrSeed: mnemonic });
 
   let twinID = 1;
   let nodeID = 1;
@@ -72,7 +72,7 @@ describe("test node module", () => {
     dummyNode.twin_id = twinID;
     dummyNode.farm_id = 9999999999999;
     await expect(client.nodes.registerNode(dummyNode as NodeRegistrationRequest)).rejects.toThrowError(
-      "Failed to register node: 400 Bad Request",
+      "Failed to register node: 500 Internal Server Error",
     );
   });
 

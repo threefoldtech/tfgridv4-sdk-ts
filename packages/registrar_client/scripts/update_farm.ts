@@ -1,6 +1,7 @@
 import { log } from "console";
 import { RegistrarClient } from "../src/";
 import config from "./config.json";
+import { KeypairType } from "@polkadot/util-crypto/types";
 
 async function updateFarm(client: RegistrarClient, twinID: number, farmID: number, farmName: string) {
   const farm = await client.farms.updateFarm(farmID, twinID, farmName, config.stellarAddress);
@@ -17,7 +18,7 @@ async function getFarm(client: RegistrarClient, farmID: number) {
 }
 
 async function main() {
-  const client = new RegistrarClient({ baseURL: config.baseUrl, privateKey: config.privateKey });
+  const client = new RegistrarClient({ baseURL: config.baseUrl, mnemonicOrSeed: config.mnemonicOrSeed, keypairType: config.keypairType as KeypairType });
   const twinID = 143;
   const farmID = 46;
   const farmName = "testfarm";

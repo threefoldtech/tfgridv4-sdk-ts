@@ -1,6 +1,7 @@
 import { log } from "console";
 import { RegistrarClient, UpdateAccountRequest } from "../src/";
 import config from "./config.json";
+import { KeypairType } from "@polkadot/util-crypto/types";
 
 async function updateAccount(client: RegistrarClient, twinID: number, update: UpdateAccountRequest) {
   const account = await client.accounts.updateAccount(twinID, update);
@@ -17,7 +18,7 @@ async function getAccount(client: RegistrarClient, twinID: number) {
 }
 
 async function main() {
-  const client = new RegistrarClient({ baseURL: config.baseUrl, privateKey: config.privateKey });
+  const client = new RegistrarClient({ baseURL: config.baseUrl, mnemonicOrSeed: config.mnemonicOrSeed, keypairType: config.keypairType as KeypairType });
   const update: UpdateAccountRequest = {
     relays: ["relay1", "relay2"],
     rmb_enc_key: "rmb_enc_key",

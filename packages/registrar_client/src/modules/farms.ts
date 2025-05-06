@@ -52,7 +52,7 @@ export class Farms {
     }
     
     const farm = { farm_name: farmName, dedicated, twin_id: twinID, stellar_address: stellarAddress };
-    const headers = createAuthHeader(twinID, this.client.privateKey);
+    const headers = await createAuthHeader(twinID, this.client.mnemonicOrSeed, this.client.keypairType);
     try {
       const data = await this.client.post<FarmCreationResponse>(`${this.farmUri}/`, farm, { headers });
       return data;
@@ -94,7 +94,7 @@ export class Farms {
       throw new Error("Invalid stellar address");
     }
 
-    const headers = createAuthHeader(twinID, this.client.privateKey);
+    const headers = await createAuthHeader(twinID, this.client.mnemonicOrSeed, this.client.keypairType);
     const farm : FarmUpdateRequest = { farm_name: name, stellar_address: stellarAddress };
     try {
       const data = await this.client.patch<any>(`${this.farmUri}/${farmID}`,farm , { headers });

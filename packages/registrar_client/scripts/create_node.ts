@@ -1,12 +1,13 @@
 import { log } from "console";
 import { Account, RegistrarClient, NodeRegistrationRequest } from "../src/";
 import config from "./config.json";
-import * as tweetnacl from "tweetnacl";
 import * as base64 from "base64-js";
+import { deriveKeyPair } from "../src/utils";
+import { KeypairType } from "@polkadot/util-crypto/types";
 
 async function getAccount(client: RegistrarClient): Promise<Account> {
-  const publicKey = tweetnacl.sign.keyPair.fromSecretKey(base64.toByteArray(config.privateKey)).publicKey;
-  const account = await client.accounts.getAccountByPublicKey(base64.fromByteArray(publicKey));
+  const keyPair = await deriveKeyPair(config.mnemonicOrSeed, config.keypairType as KeypairType);
+  const account = await client.accounts.getAccountByPublicKey(base64.fromByteArray(keyPair.publicKey));
   log("================= Getting Account =================");
   log(account);
   log("================= Getting Account =================");
@@ -29,7 +30,7 @@ async function getNode(client: RegistrarClient, nodeID: number) {
 }
 
 async function main() {
-  const client = new RegistrarClient({ baseURL: config.baseUrl, privateKey: config.privateKey });
+  const client = new RegistrarClient({ baseURL: config.baseUrl, mnemonicOrSeed: config.mnemonicOrSeed, keypairType: config.keypairType as KeypairType });
   const account = await getAccount(client);
   const twinID = account.twin_id;
   const node: NodeRegistrationRequest = {
