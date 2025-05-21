@@ -18,7 +18,7 @@ describe("test node module", () => {
       {
         name: "eth0",
         mac: "00:1A:2B:3C:4D:5E",
-        ips: "10.0.0.1",
+        ips: ["10.0.0.1"],
       },
     ],
     location: {
@@ -140,7 +140,7 @@ describe("test node module", () => {
         {
           name: "eth0",
           mac: "00:1A:2B:3C:4D:5E",
-          ips: "10.0.0.2",
+          ips: ["10.0.0.2"],
         },
       ],
       location: {
@@ -168,7 +168,7 @@ describe("test node module", () => {
 
   test("report node uptime", async () => {
     const uptime: UptimeReportRequest = {
-      timestamp: new Date().toISOString(),
+      timestamp: Math.floor(new Date().getTime() / 1000),
       uptime: 100,
     };
     const res = await client.nodes.reportNodeUptime(nodeID, twinID, uptime);
