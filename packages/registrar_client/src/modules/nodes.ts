@@ -100,16 +100,18 @@ export class Nodes {
     });
   }
 
-  _validateIp(ip: string): void {
-    const parts = ip.split(".");
-    if (parts.length !== 4) {
-      throw new Error("Invalid interfaces: ips");
-    }
-    parts.forEach(part => {
-      const num = parseInt(part);
-      if (isNaN(num) || num < 0 || num > 255) {
+  _validateIp(ips: string[]): void {
+    ips.forEach(ip => {
+      const parts = ip.split(".");
+      if (parts.length !== 4) {
         throw new Error("Invalid interfaces: ips");
       }
+      parts.forEach(part => {
+        const num = parseInt(part);
+        if (isNaN(num) || num < 0 || num > 255) {
+          throw new Error("Invalid interfaces: ips");
+        }
+      });
     });
   }
 

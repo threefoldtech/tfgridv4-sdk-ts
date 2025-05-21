@@ -52,7 +52,7 @@ export interface UpdateNodeRequest {
 }
 
 interface Interfaces {
-  ips: string;
+  ips: string[];
   mac: string;
   name: string;
 }
@@ -68,7 +68,7 @@ export interface NodesFilter {
 }
 
 export interface UptimeReportRequest {
-  timestamp: string;
+  timestamp: number;
   uptime: number;
 }
 
